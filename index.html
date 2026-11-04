@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Teoría resumida y tests para preparar el examen de Formación Básica en Seguridad (STCW).">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Test de Formación Básica STCW</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: columna de lectura de 760px; franja naranja SOLAS como única nota fuerte; señales de seguridad con sus colores normalizados */
+:root{
+  --bg:#F1F5F9; --surface:#FFFFFF; --soft:#E6EDF4; --ink:#0E2236; --muted:#566779; --line:#D4DDE7;
+  --solas:#E5550A; --solas-ink:#FFFFFF; --solas-soft:#FDE8DC;
+  --ok:#1B7A4C; --ok-bg:#E3F3EA; --bad:#B3261E; --bad-bg:#FBE7E5;
+  --sg:#00843D; --sr:#C8102E; --sb:#005EB8; --sy:#F6C800; --sk:#111111; --sw:#FFFFFF;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
+  --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
+  --ok:#5CCB94; --ok-bg:#12301F; --bad:#F27D74; --bad-bg:#3A1714; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
+  --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
+  --ok:#5CCB94; --ok-bg:#12301F; --bad:#F27D74; --bad-bg:#3A1714; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.col{max-width:760px;width:100%;margin:0 auto}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--solas);outline-offset:2px}
+
+/* barra superior */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .col{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.brand{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:.02em;text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.brand i{display:block;width:10px;height:22px;background:var(--solas)}
+.nav{display:flex;gap:2px;flex-wrap:nowrap;justify-content:flex-end}
+.brand .short{display:none}
+@media (max-width:480px){.brand .long{display:none}.brand .short{display:inline}.nav a{padding:6px 8px}}
+.nav a{font-weight:600;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:6px}
+.nav a:hover{background:var(--soft)}
+.nav a.cafe{color:var(--solas)}
+
+main{display:flex;flex-direction:column;gap:56px;padding-block:28px 64px}
+section{scroll-margin-top:72px}
+.tag{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--solas);text-transform:uppercase}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance;letter-spacing:.005em}
+h1{font-size:clamp(34px,9vw,54px);line-height:1}
+h2{font-size:clamp(28px,6vw,36px);line-height:1.05}
+h3{font-size:22px;line-height:1.15;scroll-margin-top:72px}
+p{margin:0}
+.lead{color:var(--muted);max-width:62ch;font-size:17px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.stripe{height:6px;width:72px;background:var(--solas)}
+.sec-head{display:flex;flex-direction:column;gap:8px}
+
+/* hero */
+.hero{display:flex;flex-direction:column;gap:14px}
+.hero .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;padding:13px 18px;font-weight:600;text-decoration:none;border:1px solid var(--line);background:var(--surface)}
+.btn.primary{background:var(--solas);border-color:var(--solas);color:var(--solas-ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.facts-line{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:13px;color:var(--muted)}
+
+/* tests */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.tcard{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.tcard:hover{border-color:var(--solas)}
+.tcard .k{font-family:var(--mono);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tcard .t{font-family:var(--display);font-weight:700;font-size:22px;line-height:1.1}
+.tcard .d{font-size:14px;color:var(--muted)}
+.tcard.exam{background:var(--solas-soft);border-color:transparent}
+.tcard.exam .k{color:var(--solas)}
+.group-label{font-family:var(--display);font-weight:700;font-size:20px;margin-top:8px}
+
+/* índice */
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.toc > div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.toc .code{font-family:var(--mono);font-size:12px;color:var(--solas)}
+.toc a.mt{font-family:var(--display);font-weight:700;font-size:20px;text-decoration:none;line-height:1.15}
+.toc ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:2px;color:var(--muted);font-size:15px}
+.toc ol a{text-decoration:none;color:var(--ink)}
+.toc ol a:hover{color:var(--solas)}
+
+/* módulo de teoría */
+.mod{display:flex;flex-direction:column;gap:22px;border-top:6px solid var(--solas);padding-top:18px}
+.mod .code{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.05em}
+.sub{display:flex;flex-direction:column;gap:12px}
+.sub > p{max-width:65ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.fact{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.fact > div{min-width:0}
+.fact b{display:block;font-weight:600}
+.fact p{color:var(--muted);font-size:15px}
+.ico{width:44px;height:44px;color:var(--solas);fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.ico .f{fill:currentColor;stroke:none}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;counter-reset:s}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.step b{font-family:var(--display);font-size:20px;line-height:1.1}
+.step p{font-size:14px;color:var(--muted)}
+.callout{background:var(--soft);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;max-width:65ch}
+.callout b{font-family:var(--display);font-size:18px;letter-spacing:.02em}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-size:15px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+td b{font-weight:600}
+.figure{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.figure svg{max-width:100%;height:auto}
+.figure figcaption,.cap{font-size:14px;color:var(--muted);text-align:center;max-width:56ch}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.dtext{fill:var(--ink);font-family:var(--body);font-size:15px;font-weight:600}
+.dmuted{fill:var(--muted);font-family:var(--body);font-size:13px}
+
+/* señal de alarma */
+.sig{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;padding:8px 0}
+.sig i{width:16px;height:16px;border-radius:50%;background:var(--solas);display:block}
+.sig b{width:84px;height:16px;border-radius:8px;background:var(--solas);display:block}
+
+/* clases de fuego */
+.classes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.cls{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.cls .l{display:flex;align-items:center;justify-content:space-between}
+.cls .l span{font-family:var(--display);font-weight:700;font-size:40px;line-height:1}
+.cls b{font-weight:600}
+.cls p{font-size:14px;color:var(--muted)}
+
+/* señales de seguridad */
+.signs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sign{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.sign svg{width:64px;height:64px}
+.sign b{font-weight:600}
+.sign p{font-size:14px;color:var(--muted)}
+
+/* RCP */
+.bignums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.bignum{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:2px}
+.bignum span{font-family:var(--display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.bignum small{font-size:14px;color:var(--muted)}
+
+/* escala de hipotermia */
+.scale{display:flex;border-radius:8px;overflow:hidden;font-size:13px;width:100%}
+.scale div{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.scale b{font-family:var(--mono);font-size:13px}
+.scale .s0{background:var(--ok-bg)} .scale .s1{background:var(--solas-soft)} .scale .s2{background:var(--bad-bg)} .scale .s3{background:var(--bad);color:var(--surface)}
+
+.go{align-self:flex-start}
+main > *,.stack > *,.mod > *,.sub > *,.duo > *,.hero > *{min-width:0}
+.figure svg{width:100%}
+
+/* café */
+.cafe-box{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.cafe-box > div{min-width:0;display:flex;flex-direction:column;gap:10px}
+.cafe-box svg{width:88px;height:88px;color:var(--solas)}
+.price{font-family:var(--display);font-weight:700;font-size:44px;line-height:1}
+.note{font-size:14px;color:var(--muted)}
+@media (max-width:520px){.cafe-box{grid-template-columns:1fr}}
+
+footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:14px;color:var(--muted)}
+footer .col{display:flex;flex-direction:column;gap:8px}
+footer ul{margin:0;padding-left:18px}
+
+/* test */
+#quiz{padding-block:20px 56px}
+#quiz .col{display:flex;flex-direction:column;gap:18px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.exit{background:none;border:0;font-family:var(--mono);font-size:13px;color:var(--muted);padding:4px 0;text-decoration:underline}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--solas);transition:width .25s}
+.q{font-size:20px;font-weight:600;line-height:1.4;text-wrap:pretty}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:13px 14px;width:100%}
+.opt .k{font-family:var(--mono);font-size:13px;color:var(--muted);padding-top:2px;flex:none}
+.opt span:last-child{min-width:0}
+.opt:not(:disabled):hover{border-color:var(--ink)}
+.opt.sel{border-color:var(--solas);box-shadow:inset 0 0 0 1px var(--solas)}
+.opt.sel .k{color:var(--solas)}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)} .opt.ok .k{color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--bad-bg)} .opt.bad .k{color:var(--bad)}
+.opt:disabled{cursor:default}
+.exp{border-left:4px solid var(--solas);padding:4px 0 4px 12px}
+.exp b{display:block;font-family:var(--display);font-size:19px;letter-spacing:.02em}
+.exp b.ok{color:var(--ok)} .exp b.bad{color:var(--bad)}
+.exp p{color:var(--muted)}
+.next{width:100%;justify-content:space-between;font-family:var(--display);font-size:21px;letter-spacing:.02em;font-weight:700;padding:15px 18px}
+.score{font-family:var(--display);font-weight:700;font-size:72px;line-height:1;font-variant-numeric:tabular-nums}
+.score small{font-size:30px;color:var(--muted)}
+.bymod{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.bymod div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column}
+.bymod span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.bymod b{font-family:var(--display);font-size:24px;font-variant-numeric:tabular-nums}
+.rv{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.rv .mt{font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.rv .you{color:var(--bad)} .rv .right{color:var(--ok);font-weight:600} .rv .why{color:var(--muted);font-size:15px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none} html{scroll-behavior:auto}}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<!-- Pictogramas dibujados para esta web -->
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bell" viewBox="0 0 48 48"><path d="M24 6c-7 0-12 5-12 12v9l-4 6h32l-4-6v-9c0-7-5-12-12-12z"/><path d="M20 37a4 4 0 0 0 8 0"/></symbol>
+  <symbol id="i-vest" viewBox="0 0 48 48"><path d="M17 7h5l2 5 2-5h5l7 9v25H29V22l-5-4-5 4v19H10V16z"/><path d="M10 30h9M29 30h9"/></symbol>
+  <symbol id="i-ring" viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="8"/><path d="M29.7 18.3l6.3-6.3M18.3 18.3L12 12M18.3 29.7L12 36M29.7 29.7L36 36"/></symbol>
+  <symbol id="i-raft" viewBox="0 0 48 48"><ellipse cx="24" cy="35" rx="19" ry="6"/><path d="M9 32c2-12 8-18 15-18s13 6 15 18"/><path d="M20 30c0-4 2-7 4-7s4 3 4 7"/><path d="M24 14V9"/></symbol>
+  <symbol id="i-suit" viewBox="0 0 48 48"><circle cx="24" cy="9" r="4.5"/><path d="M15 17h18l3 13h-4l-2-6v20h-4V31h-4v13h-4V24l-2 6h-4z"/></symbol>
+  <symbol id="i-hru" viewBox="0 0 48 48"><path d="M4 12c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3"/><rect x="14" y="22" width="20" height="12" rx="6"/><path d="M24 34v8M18 42h12M24 22v-4"/></symbol>
+  <symbol id="i-epirb" viewBox="0 0 48 48"><path d="M17 16h14v24a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z"/><path d="M24 16V6"/><path d="M31 6a8 8 0 0 1 0 9M35 3a13 13 0 0 1 0 15M17 6a8 8 0 0 0 0 9M13 3a13 13 0 0 0 0 15"/><path d="M21 26h6"/></symbol>
+  <symbol id="i-flare" viewBox="0 0 48 48"><path d="M21 24h6v20h-6z"/><path d="M24 21c-5-3-5-9 0-15 1 4 6 6 4 11-1 3-2 4-4 4z"/></symbol>
+  <symbol id="i-smoke" viewBox="0 0 48 48"><rect x="17" y="30" width="14" height="12" rx="2"/><path d="M22 30c-6-1-7-7-2-9-3-5 4-9 7-5 4-3 9 1 7 5 4 2 2 8-3 9"/></symbol>
+  <symbol id="i-thermo" viewBox="0 0 48 48"><path d="M21 8a3 3 0 0 1 6 0v22a7 7 0 1 1-6 0z"/><circle class="f" cx="24" cy="36" r="3.5"/><path d="M24 33V18"/><path d="M31 12h4M31 18h4M31 24h4"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 48 48"><path d="M24 5c6 9 12 15 12 23a12 12 0 0 1-24 0c0-8 6-14 12-23z"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 48 48"><path d="M24 44c-8 0-13-5-13-12 0-8 7-11 8-19 4 3 6 7 6 10 2-2 3-4 3-7 5 4 9 10 9 16 0 7-5 12-13 12z"/><path d="M24 44c-3 0-5-2-5-5 0-4 5-6 5-10 3 3 5 6 5 10 0 3-2 5-5 5z"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 48 48"><path d="M17 19h13v21a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2z"/><path d="M19 19v-6h9v6"/><path d="M28 10h8M23 13V9"/><path d="M19 15c-6 0-9 4-9 10v4"/></symbol>
+  <symbol id="i-log" viewBox="0 0 48 48"><ellipse cx="34" cy="28" rx="7" ry="9"/><path d="M34 19H12c-4 0-7 4-7 9s3 9 7 9h22"/><circle cx="34" cy="28" r="2.5"/></symbol>
+  <symbol id="i-gas" viewBox="0 0 48 48"><rect x="15" y="15" width="18" height="28" rx="8"/><path d="M21 15V9h6v6M17 9h14"/></symbol>
+  <symbol id="i-ingot" viewBox="0 0 48 48"><path d="M5 38l5-10h28l5 10z"/><path d="M12 28l4-9h16l4 9"/></symbol>
+  <symbol id="i-pan" viewBox="0 0 48 48"><path d="M5 26h28c0 7-6 12-14 12S5 33 5 26z"/><path d="M33 28h11"/><path d="M14 20c-2-3 0-6 2-8 0 3 3 4 2 8M23 20c-2-3 0-6 2-8 0 3 3 4 2 8"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 48 48"><path d="M24 41S7 31 7 18a9 9 0 0 1 17-4 9 9 0 0 1 17 4c0 13-17 23-17 23z"/><path d="M11 24h8l3-5 4 9 3-4h8"/></symbol>
+  <symbol id="i-lungs" viewBox="0 0 48 48"><path d="M24 6v15"/><path d="M24 20c-3 0-5 2-7 1-6 2-10 8-10 16 0 4 3 6 7 5l10-4zM24 20c3 0 5 2 7 1 6 2 10 8 10 16 0 4-3 6-7 5l-10-4z"/></symbol>
+  <symbol id="i-cross" viewBox="0 0 48 48"><path d="M19 7h10v12h12v10H29v12H19V29H7V19h12z"/></symbol>
+  <symbol id="i-bone" viewBox="0 0 48 48"><path d="M15 9a5 5 0 1 0-6 6l24 24a5 5 0 1 0 6-6z"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 48 48"><path d="M27 4L10 28h12l-2 16 17-24H25z"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 48 48"><path d="M4 24s7-12 20-12 20 12 20 12-7 12-20 12S4 24 4 24z"/><circle cx="24" cy="24" r="5"/></symbol>
+  <symbol id="i-radio" viewBox="0 0 48 48"><rect x="15" y="15" width="18" height="28" rx="3"/><path d="M20 15V4"/><path d="M19 22h10M19 28h10M19 33h10"/></symbol>
+  <symbol id="i-list" viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="36" rx="3"/><path d="M16 15h16M16 22h16M16 29h10"/></symbol>
+  <symbol id="i-gauge" viewBox="0 0 48 48"><circle cx="24" cy="26" r="16"/><path d="M24 26l8-8M16 36h16"/><path d="M24 10v4M10 26h4M38 26h-4"/></symbol>
+  <symbol id="i-helmet" viewBox="0 0 48 48"><path d="M6 34h36"/><path d="M10 34c0-10 6-17 14-17s14 7 14 17"/><path d="M24 17v-5h-4"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 48 48"><path d="M8 40l14-14"/><path d="M26 22l3-12M26 22l12-3M26 22l10 10M26 22l-2 12M26 22L16 12"/></symbol>
+  <symbol id="i-door" viewBox="0 0 48 48"><rect x="11" y="5" width="26" height="38" rx="8"/><circle cx="24" cy="24" r="6"/><path d="M24 15v18M15 24h18"/></symbol>
+  <symbol id="i-bin" viewBox="0 0 48 48"><path d="M9 14h30M19 14V9h10v5"/><path d="M13 14l2 28h18l2-28"/><path d="M20 21v14M28 21v14"/></symbol>
+  <symbol id="i-oil" viewBox="0 0 48 48"><path d="M24 5c5 7 10 12 10 18a10 10 0 0 1-20 0c0-6 5-11 10-18z"/><path d="M4 40c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 48 48"><path d="M31 7a17 17 0 1 0 10 27A14 14 0 0 1 31 7z"/></symbol>
+  <symbol id="i-glass" viewBox="0 0 48 48"><path d="M14 7h20l-3 16a7 7 0 0 1-14 0z"/><path d="M24 30v10M17 41h14"/><path d="M15 14h18"/></symbol>
+  <symbol id="i-mob" viewBox="0 0 48 48"><circle cx="24" cy="13" r="5"/><path d="M12 22l6 4h12l6-4"/><path d="M4 34c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3"/></symbol>
+  <symbol id="i-huddle" viewBox="0 0 48 48"><circle cx="16" cy="18" r="5"/><circle cx="32" cy="18" r="5"/><circle cx="24" cy="28" r="5"/><path d="M4 40c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3"/></symbol>
+  <symbol id="i-help" viewBox="0 0 48 48"><circle cx="24" cy="10" r="5"/><path d="M17 19c-4 6-3 13 7 15 10-2 11-9 7-15"/><path d="M19 22l5 5 5-5"/><path d="M4 40c4 0 4 3 8 3s4-3 8-3 4 3 8 3 4-3 8-3 4 3 8 3"/></symbol>
+  <symbol id="i-jump" viewBox="0 0 48 48"><circle cx="24" cy="7" r="4"/><path d="M24 11v15M17 15l7 4 7-4M20 38l4-12 4 12"/><path d="M4 44c4 0 4-2 8-2s4 2 8 2 4-2 8-2 4 2 8 2 4-2 8-2"/></symbol>
+  <symbol id="i-cut" viewBox="0 0 48 48"><circle cx="13" cy="34" r="5"/><circle cx="13" cy="14" r="5"/><path d="M17 17l25 18M17 31l25-18"/></symbol>
+  <symbol id="i-away" viewBox="0 0 48 48"><path d="M7 24h30M28 14l10 10-10 10"/></symbol>
+  <symbol id="i-drogue" viewBox="0 0 48 48"><path d="M43 24H24"/><path d="M24 24L8 13v22z"/></symbol>
+  <symbol id="i-tent" viewBox="0 0 48 48"><path d="M7 38c2-15 8-23 17-23s15 8 17 23z"/><path d="M24 15v23M18 27l6 4 6-4"/></symbol>
+  <symbol id="i-bucket" viewBox="0 0 48 48"><path d="M11 17h26l-3 24H14z"/><path d="M11 17c0-6 26-6 26 0"/></symbol>
+  <symbol id="i-pill" viewBox="0 0 48 48"><g transform="rotate(-35 24 24)"><rect x="7" y="17" width="34" height="14" rx="7"/><path d="M24 17v14"/></g></symbol>
+  <symbol id="i-shield" viewBox="0 0 48 48"><path d="M24 5l15 6v11c0 10-7 17-15 21-8-4-15-11-15-21V11z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 48 48"><path d="M14 6h7l3 9-5 3a24 24 0 0 0 11 11l3-5 9 3v7a3 3 0 0 1-3 3C24 37 11 24 11 9a3 3 0 0 1 3-3z"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 48 48"><path d="M16 26V11a3 3 0 0 1 6 0v12V8a3 3 0 0 1 6 0v15V11a3 3 0 0 1 6 0v18c0 9-6 14-13 14-5 0-8-3-11-8l-5-8a3 3 0 0 1 5-3z"/></symbol>
+  <symbol id="i-cup" viewBox="0 0 48 48"><path d="M8 18h26v10a11 11 0 0 1-11 11h-4A11 11 0 0 1 8 28z"/><path d="M34 21h3a5 5 0 0 1 0 10h-3"/><path d="M6 43h30"/><path d="M15 7c-2 3 2 4 0 7M21 5c-2 3 2 4 0 7M27 7c-2 3 2 4 0 7"/></symbol>
+</svg>
+
+<header class="top gut">
+  <div class="col">
+    <a class="brand" href="#inicio"><i></i><span class="long">Formación Básica STCW</span><span class="short">FB · STCW</span></a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#tests">Tests</a>
+      <a href="#teoria">Teoría</a>
+      <a href="#cafe" class="cafe">Café</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="gut">
+<div class="col stack" style="gap:56px">
+
+  <section id="inicio" class="hero">
+    <span class="tag">STCW · Regla VI/1 · Sección A-VI/1</span>
+    <h1>Formación Básica en Seguridad</h1>
+    <div class="stripe"></div>
+    <p class="lead">Teoría resumida y tests para preparar el examen del curso. Hecho para repasar entre clases, desde el móvil.</p>
+    <div class="facts-line"><span>4 módulos</span><span>80 preguntas</span><span>4 simulacros</span></div>
+    <div class="row">
+      <a class="btn primary" href="#tests">Hacer un test</a>
+      <a class="btn" href="#teoria">Repasar la teoría</a>
+    </div>
+  </section>
+
+  <!-- TESTS -->
+  <section id="tests" class="stack">
+    <div class="sec-head">
+      <span class="tag">Practica</span>
+      <h2>Tests</h2>
+      <p class="lead">En los tests por módulo ves la respuesta al momento. En los simulacros no hay corrección hasta el final, como en el examen.</p>
+    </div>
+    <div class="group-label">Simulacros de examen</div>
+    <div class="grid" id="g-sim"></div>
+    <div class="group-label">Por módulos</div>
+    <div class="grid" id="g-mod"></div>
+    <div class="group-label">Más práctica</div>
+    <div class="grid" id="g-more"></div>
+  </section>
+
+  <!-- TEORÍA -->
+  <section id="teoria" class="stack">
+    <div class="sec-head">
+      <span class="tag">Estudia</span>
+      <h2>Teoría</h2>
+      <p class="lead">Lo esencial de cada módulo, con los datos que más se preguntan.</p>
+    </div>
+    <nav class="toc" aria-label="Índice de la teoría">
+      <div><span class="code">Módulo 1 · A-VI/1-1</span><a class="mt" href="#m1">Supervivencia personal</a>
+        <ol><li><a href="#m1-senales">Señales y abandono</a></li><li><a href="#m1-equipos">Dispositivos de salvamento</a></li><li><a href="#m1-agua">En el agua</a></li><li><a href="#m1-balsa">En la balsa</a></li><li><a href="#m1-localizar">Que te encuentren</a></li><li><a href="#m1-peligros">Peligros del náufrago</a></li></ol></div>
+      <div><span class="code">Módulo 2 · A-VI/1-2</span><a class="mt" href="#m2">Prevención y lucha contra incendios</a>
+        <ol><li><a href="#m2-fuego">El fuego y cómo se apaga</a></li><li><a href="#m2-transmision">Cómo se propaga</a></li><li><a href="#m2-clases">Clases de fuego</a></li><li><a href="#m2-agentes">Agentes extintores</a></li><li><a href="#m2-actuar">Cómo actuar</a></li><li><a href="#m2-prevencion">Prevención y sistemas fijos</a></li></ol></div>
+      <div><span class="code">Módulo 3 · A-VI/1-3</span><a class="mt" href="#m3">Primeros auxilios básicos</a>
+        <ol><li><a href="#m3-pas">PAS y valoración</a></li><li><a href="#m3-rcp">RCP y atragantamiento</a></li><li><a href="#m3-hemorragias">Hemorragias y shock</a></li><li><a href="#m3-quemaduras">Quemaduras</a></li><li><a href="#m3-lesiones">Fracturas y otras lesiones</a></li><li><a href="#m3-hipotermia">Hipotermia y consejo médico</a></li></ol></div>
+      <div><span class="code">Módulo 4 · A-VI/1-4</span><a class="mt" href="#m4">Seguridad personal y responsabilidades sociales</a>
+        <ol><li><a href="#m4-organizacion">Cuadro y ejercicios</a></li><li><a href="#m4-socorro">Socorro y radio</a></li><li><a href="#m4-senalizacion">Señalización de seguridad</a></li><li><a href="#m4-trabajo">Trabajo seguro</a></li><li><a href="#m4-marpol">Contaminación (MARPOL)</a></li><li><a href="#m4-stcw">Descanso y alcohol</a></li></ol></div>
+    </nav>
+  </section>
+
+  <!-- MÓDULO 1 -->
+  <section id="m1" class="mod">
+    <span class="code">MÓDULO 1 · STCW A-VI/1-1</span>
+    <h2>Técnicas de supervivencia personal</h2>
+
+    <div class="sub" id="m1-senales">
+      <h3>Señales y abandono</h3>
+      <div class="figure">
+        <div class="sig" aria-label="Siete pitidos cortos y uno largo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b></b></div>
+        <figcaption><b>Alarma general de emergencia:</b> siete o más pitidos cortos seguidos de uno largo, con el pito del buque y los timbres. Al oírla, vas a tu puesto de reunión.</figcaption>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Solo el capitán ordena el abandono</b><p>Hasta esa orden nadie deja el buque. Un abandono precipitado es muy peligroso.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-vest"/></svg><div><b>Antes de salir</b><p>Mucha ropa de abrigo, gorro, chaleco bien atado y, si da tiempo, agua y pastillas contra el mareo.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-jump"/></svg><div><b>Saltar al agua</b><p>Comprueba que no hay nada debajo. Pies primero, piernas juntas, mirando al frente, una mano tapando nariz y boca y el otro brazo sujetando el chaleco.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-fire"/></svg><div><b>Si hay combustible ardiendo</b><p>Salta por barlovento, el lado de donde viene el viento, y aléjate contra el viento. El viento empuja el fuego hacia sotavento.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m1-equipos">
+      <h3>Dispositivos de salvamento</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-vest"/></svg><div><b>Chaleco salvavidas</b><p>Lleva luz, silbato y bandas retrorreflectantes.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-ring"/></svg><div><b>Aro salvavidas</b><p>Se lanza a quien cae al agua. Algunos llevan luz de encendido automático y señal fumígena.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-suit"/></svg><div><b>Traje de inmersión</b><p>Reduce la pérdida de calor en agua fría. Algunos necesitan llevar el chaleco encima.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Ayuda térmica</b><p>Bolsa que envuelve al náufrago y reduce la pérdida de calor por convección y evaporación.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Balsa salvavidas</b><p>Se infla al tirar de la boza. Lleva 1,5 l de agua por persona y una ración de alimentos de 10.000 kJ.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-hru"/></svg><div><b>Zafa hidrostática</b><p>Si el buque se hunde, suelta la balsa antes de los 4 m de profundidad. La balsa sube y se infla sola.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m1-agua">
+      <h3>En el agua</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-help"/></svg><div><b>Postura HELP, si estás solo</b><p>Rodillas al pecho y brazos alrededor. Protege axilas, ingles y cuello, las zonas que más calor pierden.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-huddle"/></svg><div><b>En grupo, en círculo</b><p>Agarrados unos a otros. Se pierde menos calor, os veis mejor desde el aire y os dais ánimo.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Balsa volcada</b><p>Súbete por el lado de la botella de gas y tira de la cincha de adrizamiento.</p></div></div>
+      </div>
+      <div class="callout"><b>No nades sin rumbo</b><p>Nadar gasta energía y enfría el cuerpo mucho más rápido. Quédate quieto con el chaleco salvo para llegar a la balsa o al grupo.</p></div>
+    </div>
+
+    <div class="sub" id="m1-balsa">
+      <h3>En la balsa</h3>
+      <p>Las acciones inmediatas al subir, en este orden:</p>
+      <div class="steps">
+        <div class="step"><svg class="ico"><use href="#i-cut"/></svg><span class="n">1</span><b>Cortar</b><p>La boza, con el cuchillo de la balsa.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-away"/></svg><span class="n">2</span><b>Alejarse</b><p>Del buque, recogiendo supervivientes.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-drogue"/></svg><span class="n">3</span><b>Ancla flotante</b><p>Frena la deriva y estabiliza la balsa.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-tent"/></svg><span class="n">4</span><b>Cerrar</b><p>Las entradas, para conservar el calor.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-bucket"/></svg><span class="n">5</span><b>Mantener</b><p>Achicar, inflar el doble fondo, ventilar.</p></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Agua</b><p>Nada en las primeras 24 h salvo heridos o enfermos. Después, unos 0,5 l al día repartidos en varias tomas. Nunca agua de mar ni orina.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-pill"/></svg><div><b>Pastillas contra el mareo</b><p>En cuanto subes. Vomitar deshidrata y debilita.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m1-localizar">
+      <h3>Que te encuentren</h3>
+      <div class="duo">
+        <figure class="figure" style="margin:0">
+          <svg viewBox="0 0 120 120" width="200" height="200" role="img" aria-label="Pantalla de radar con la línea de 12 puntos del SART">
+            <circle cx="60" cy="60" r="54" fill="var(--soft)" stroke="var(--line)" stroke-width="1.5"/>
+            <circle cx="60" cy="60" r="36" fill="none" stroke="var(--line)" stroke-width="1"/>
+            <circle cx="60" cy="60" r="18" fill="none" stroke="var(--line)" stroke-width="1"/>
+            <path d="M60 6v108M6 60h108" stroke="var(--line)" stroke-width="1"/>
+            <circle cx="60" cy="60" r="2.5" fill="var(--ink)"/>
+            <g fill="var(--solas)"><circle cx="66" cy="60" r="2"/><circle cx="70.5" cy="60" r="2"/><circle cx="75" cy="60" r="2"/><circle cx="79.5" cy="60" r="2"/><circle cx="84" cy="60" r="2"/><circle cx="88.5" cy="60" r="2"/><circle cx="93" cy="60" r="2"/><circle cx="97.5" cy="60" r="2"/><circle cx="102" cy="60" r="2"/><circle cx="106.5" cy="60" r="2"/><circle cx="111" cy="60" r="2"/><circle cx="115.5" cy="60" r="2"/></g>
+          </svg>
+          <figcaption><b>SART</b> (respondedor de radar, 9 GHz): aparece en el radar de un buque como una línea de 12 puntos. El SART está en el punto más cercano al centro.</figcaption>
+        </figure>
+        <div class="stack" style="gap:10px">
+          <div class="fact"><svg class="ico"><use href="#i-epirb"/></svg><div><b>Radiobaliza (RLS / EPIRB)</b><p>Emite en 406 MHz al sistema de satélites COSPAS-SARSAT, con tu posición. Usa 121,5 MHz para guiar a los rescatadores en la zona.</p></div></div>
+          <div class="fact"><svg class="ico"><use href="#i-flare"/></svg><div><b>Bengalas y cohetes</b><p>Bengala de mano roja y cohete con paracaídas rojo, mejor de noche. Solo cuando veas un buque o una aeronave, y a sotavento.</p></div></div>
+          <div class="fact"><svg class="ico"><use href="#i-smoke"/></svg><div><b>Señal fumígena</b><p>Humo naranja. Se ve bien de día, sobre todo desde el aire.</p></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub" id="m1-peligros">
+      <h3>Peligros del náufrago</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Hipotermia</b><p>Temperatura del cuerpo por debajo de 35 °C. En el agua se pierde calor muchas veces más rápido que en el aire.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Deshidratación</b><p>Por mareo, sudor o beber agua de mar. Racionar el agua desde el segundo día.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-shield"/></svg><div><b>Pánico y desánimo</b><p>Organización, rutinas y tareas para todos. Se nombra un responsable del agua.</p></div></div>
+      </div>
+    </div>
+    <button class="btn go" data-start="m1">Hacer el test del módulo 1</button>
+  </section>
+
+  <!-- MÓDULO 2 -->
+  <section id="m2" class="mod">
+    <span class="code">MÓDULO 2 · STCW A-VI/1-2</span>
+    <h2>Prevención y lucha contra incendios</h2>
+
+    <div class="sub" id="m2-fuego">
+      <h3>El fuego y cómo se apaga</h3>
+      <p>Para que haya fuego hacen falta cuatro cosas. Si quitas una, el fuego se apaga. Cada forma de extinguir ataca una de ellas.</p>
+      <figure class="figure" style="margin:0">
+        <svg viewBox="0 0 340 250" width="440" role="img" aria-label="Tetraedro del fuego">
+          <polygon points="170,30 285,200 55,200" fill="var(--solas-soft)" stroke="var(--solas)" stroke-width="3" stroke-linejoin="round"/>
+          <text x="170" y="138" text-anchor="middle" class="dtext">Reacción</text>
+          <text x="170" y="156" text-anchor="middle" class="dtext">en cadena</text>
+          <text x="170" y="174" text-anchor="middle" class="dmuted">→ inhibición</text>
+          <text x="98" y="104" text-anchor="end" class="dtext">Calor</text>
+          <text x="98" y="121" text-anchor="end" class="dmuted">→ enfriamiento</text>
+          <text x="242" y="104" class="dtext">Oxígeno</text>
+          <text x="242" y="121" class="dmuted">→ sofocación</text>
+          <text x="170" y="226" text-anchor="middle" class="dtext">Combustible</text>
+          <text x="170" y="243" text-anchor="middle" class="dmuted">→ eliminación (cerrar válvulas, retirar material)</text>
+        </svg>
+        <figcaption>Tetraedro del fuego. Debajo de cada elemento, el método de extinción que lo elimina.</figcaption>
+      </figure>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Punto de inflamación</b><p>Temperatura mínima a la que un líquido da vapores que arden con una llama. La autoignición es arder sin llama externa.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-fire"/></svg><div><b>El humo mata más que las llamas</b><p>El monóxido de carbono y otros gases tóxicos incapacitan en poco tiempo. Avanza agachado; para entrar, equipo de respiración autónomo.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m2-transmision">
+      <h3>Cómo se propaga</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-ingot"/></svg><div><b>Conducción</b><p>A través de los materiales. El acero de mamparos y cubiertas lleva el calor al local de al lado: hay que enfriarlos (control de límites).</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-smoke"/></svg><div><b>Convección</b><p>El humo y los gases calientes suben por escaleras, pasillos y conductos de ventilación.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-spark"/></svg><div><b>Radiación</b><p>El calor viaja en línea recta, como el del sol, e inflama materiales cercanos sin tocarlos.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m2-clases">
+      <h3>Clases de fuego</h3>
+      <div class="classes">
+        <div class="cls"><div class="l"><span>A</span><svg class="ico"><use href="#i-log"/></svg></div><b>Sólidos</b><p>Madera, papel, trapos, cabos. Dejan brasas.</p></div>
+        <div class="cls"><div class="l"><span>B</span><svg class="ico"><use href="#i-drop"/></svg></div><b>Líquidos</b><p>Gasoil, gasolina, pinturas, aceites.</p></div>
+        <div class="cls"><div class="l"><span>C</span><svg class="ico"><use href="#i-gas"/></svg></div><b>Gases</b><p>Butano, propano, acetileno. Primero se corta el gas.</p></div>
+        <div class="cls"><div class="l"><span>D</span><svg class="ico"><use href="#i-ingot"/></svg></div><b>Metales</b><p>Magnesio, sodio, aluminio en polvo. Polvo especial.</p></div>
+        <div class="cls"><div class="l"><span>F</span><svg class="ico"><use href="#i-pan"/></svg></div><b>Aceites de cocina</b><p>Freidoras y sartenes. Nunca agua.</p></div>
+      </div>
+      <p class="cap" style="text-align:left">Clasificación europea (norma EN 2). Algunos manuales antiguos traen las clases C y D cambiadas: C son gases y D metales.</p>
+    </div>
+
+    <div class="sub" id="m2-agentes">
+      <h3>Agentes extintores</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Agente</th><th>Cómo apaga</th><th>Para</th><th>Cuidado</th></tr></thead>
+        <tbody>
+          <tr><td><b>Agua a chorro</b></td><td>Enfriamiento</td><td>A</td><td>Nunca en equipos eléctricos ni en aceite caliente</td></tr>
+          <tr><td><b>Agua pulverizada</b></td><td>Enfriamiento y algo de sofocación</td><td>A, y para proteger al equipo</td><td>Gasta menos agua y no inunda tanto</td></tr>
+          <tr><td><b>Espuma</b></td><td>Sofocación y enfriamiento</td><td>B, también A</td><td>Conduce la electricidad</td></tr>
+          <tr><td><b>CO₂</b></td><td>Sofocación</td><td>B y equipos eléctricos</td><td>Asfixia en espacios cerrados. La boquilla se congela</td></tr>
+          <tr><td><b>Polvo químico</b></td><td>Inhibición</td><td>ABC o BC, eléctricos</td><td>Ensucia y quita visibilidad</td></tr>
+          <tr><td><b>Polvo especial</b></td><td>Sofocación</td><td>D</td><td>Solo para metales</td></tr>
+          <tr><td><b>Agente clase F</b></td><td>Enfriamiento y forma una capa</td><td>F</td><td>Junto con la tapa o la manta ignífuga</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="sub" id="m2-actuar">
+      <h3>Cómo actuar</h3>
+      <div class="steps">
+        <div class="step"><svg class="ico"><use href="#i-bell"/></svg><span class="n">1</span><b>Alarma</b><p>Siempre lo primero.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-ext"/></svg><span class="n">2</span><b>Atacar</b><p>Solo si es pequeño y es seguro.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-door"/></svg><span class="n">3</span><b>Contener</b><p>Cerrar puertas, ventilación y combustible.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-drop"/></svg><span class="n">4</span><b>Límites</b><p>Enfriar mamparos y cubiertas vecinas.</p></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-ext"/></svg><div><b>Extintor portátil</b><p>A la base de las llamas, con el viento o la corriente de aire a la espalda.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-hand"/></svg><div><b>Puerta sospechosa</b><p>Tócala con el dorso de la mano. Si está caliente, ábrela agachado y protegido detrás de ella.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-pan"/></svg><div><b>Sartén ardiendo</b><p>Apaga el fuego de la cocina y tapa la sartén o usa la manta ignífuga. El agua proyecta el aceite en llamas.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m2-prevencion">
+      <h3>Prevención y sistemas fijos</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-gas"/></svg><div><b>CO₂ fijo en máquinas</b><p>Antes de descargarlo: evacuar a todos, contar al personal y cerrar puertas, ventilación y aberturas.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Rociadores automáticos</b><p>Una ampolla de vidrio se rompe con el calor. Solo se abren los que están sobre el fuego.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bell"/></svg><div><b>Detectores</b><p>De humo, de calor y de llama, conectados a la alarma del puente.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-ring"/></svg><div><b>Conexión internacional a tierra</b><p>Brida normalizada para unir las mangueras del buque con las de tierra o de otro buque.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bin"/></svg><div><b>Trapos con aceite o pintura</b><p>Pueden arder solos (combustión espontánea). Se guardan en recipientes metálicos cerrados.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-spark"/></svg><div><b>Trabajos en caliente</b><p>Con permiso, sin combustibles cerca y con vigilancia contra incendios durante y después.</p></div></div>
+      </div>
+    </div>
+    <button class="btn go" data-start="m2">Hacer el test del módulo 2</button>
+  </section>
+
+  <!-- MÓDULO 3 -->
+  <section id="m3" class="mod">
+    <span class="code">MÓDULO 3 · STCW A-VI/1-3</span>
+    <h2>Primeros auxilios básicos</h2>
+
+    <div class="sub" id="m3-pas">
+      <h3>PAS y valoración</h3>
+      <div class="steps">
+        <div class="step"><svg class="ico"><use href="#i-shield"/></svg><span class="n">P</span><b>Proteger</b><p>Que el lugar sea seguro para ti y la víctima.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-phone"/></svg><span class="n">A</span><b>Avisar</b><p>Al puente o a quien pueda pedir ayuda.</p></div>
+        <div class="step"><svg class="ico"><use href="#i-cross"/></svg><span class="n">S</span><b>Socorrer</b><p>Atender a la víctima.</p></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-eye"/></svg><div><b>¿Responde?</b><p>Háblale y sacúdele suavemente los hombros.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-lungs"/></svg><div><b>Abre la vía aérea y mira si respira</b><p>Maniobra frente-mentón. Ver, oír y sentir, como máximo 10 segundos.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-huddle"/></svg><div><b>Inconsciente pero respira</b><p>Posición lateral de seguridad, y sigue comprobando la respiración.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m3-rcp">
+      <h3>RCP y atragantamiento</h3>
+      <p>Si no responde y no respira con normalidad, pide un desfibrilador (DEA) y empieza la RCP.</p>
+      <div class="bignums">
+        <div class="bignum"><span>30 : 2</span><small>compresiones : ventilaciones</small></div>
+        <div class="bignum"><span>100–120</span><small>compresiones por minuto</small></div>
+        <div class="bignum"><span>5–6 cm</span><small>de profundidad, centro del pecho</small></div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-bolt"/></svg><div><b>DEA</b><p>Úsalo en cuanto llegue y sigue sus instrucciones de voz. Solo da descarga si hace falta.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-mob"/></svg><div><b>Ahogados</b><p>Empieza con 5 ventilaciones de rescate y luego 30:2. No intentes sacar el agua de los pulmones.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-hand"/></svg><div><b>Atragantamiento</b><p>Si no puede toser ni hablar: 5 golpes en la espalda y 5 compresiones abdominales, alternando. Si pierde la consciencia, RCP.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m3-hemorragias">
+      <h3>Hemorragias y shock</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Presión directa</b><p>Lo primero ante una hemorragia: apretar fuerte sobre la herida con gasas o un paño limpio.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Torniquete</b><p>Solo en una extremidad que no para de sangrar con presión. Anota la hora y no lo aflojes.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-eye"/></svg><div><b>Nariz</b><p>Cabeza un poco hacia delante y aprieta la parte blanda unos 10 minutos. Nunca hacia atrás.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-heart"/></svg><div><b>Shock</b><p>Pálido, sudoroso, pulso rápido y débil. Túmbalo, eleva las piernas si no hay lesión, abrígalo y pide ayuda.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m3-quemaduras">
+      <h3>Quemaduras</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-fire"/></svg><div><b>Por calor</b><p>Agua corriente fresca, no helada, al menos 20 minutos. Cubre con un apósito limpio. Ni hielo, ni pomadas, ni reventar ampollas, ni arrancar la ropa pegada.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-oil"/></svg><div><b>Químicas</b><p>Quita la ropa contaminada y lava con agua abundante unos 20 minutos.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bolt"/></svg><div><b>Eléctricas</b><p>Corta la corriente antes de tocar a la víctima. Si no puedes, apártala con algo seco que no conduzca.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m3-lesiones">
+      <h3>Fracturas y otras lesiones</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-bone"/></svg><div><b>Fractura</b><p>Inmoviliza tal como está, incluyendo las articulaciones de arriba y abajo. No intentes recolocar el hueso.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-shield"/></svg><div><b>Columna</b><p>Muévela solo si es imprescindible, en bloque, con cabeza, cuello y tronco alineados.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-eye"/></svg><div><b>Objeto clavado en un ojo</b><p>No lo saques. Tapa los dos ojos, porque se mueven a la vez.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m3-hipotermia">
+      <h3>Hipotermia y consejo médico</h3>
+      <div class="scale" role="img" aria-label="Escala de hipotermia">
+        <div class="s0"><b>37 °C</b>Normal</div>
+        <div class="s1"><b>35–32 °C</b>Leve: tiembla</div>
+        <div class="s2"><b>32–28 °C</b>Moderada</div>
+        <div class="s3"><b>&lt; 28 °C</b>Grave</div>
+      </div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Náufrago con hipotermia</b><p>Muévelo con cuidado y en horizontal, quítale la ropa mojada y abrígalo. Nada de frotar ni de alcohol.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-radio"/></svg><div><b>Centro Radio-Médico Español</b><p>Del Instituto Social de la Marina. Da consejo médico a los buques las 24 horas.</p></div></div>
+      </div>
+    </div>
+    <button class="btn go" data-start="m3">Hacer el test del módulo 3</button>
+  </section>
+
+  <!-- MÓDULO 4 -->
+  <section id="m4" class="mod">
+    <span class="code">MÓDULO 4 · STCW A-VI/1-4</span>
+    <h2>Seguridad personal y responsabilidades sociales</h2>
+
+    <div class="sub" id="m4-organizacion">
+      <h3>Cuadro y ejercicios</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Cuadro de obligaciones y consignas</b><p>Dice qué hace cada tripulante en cada emergencia y dónde va. Está expuesto en sitios visibles.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Reunión y embarco</b><p>Puesto de reunión: donde te concentras al oír la alarma. Puesto de embarco: desde donde subes a la embarcación de supervivencia.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bell"/></svg><div><b>Ejercicios (SOLAS)</b><p>Cada tripulante, uno de abandono y uno de incendio al mes. Si más del 25 % no ha hecho ninguno en ese buque el último mes, se hacen en las 24 h tras salir de puerto. En pasaje, cada semana.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m4-socorro">
+      <h3>Socorro y radio</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Llamada</th><th>Significa</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td><b>MAYDAY</b></td><td>Socorro: peligro grave e inminente</td><td>Incendio sin control, hundimiento</td></tr>
+          <tr><td><b>PAN PAN</b></td><td>Urgencia, sin peligro inminente</td><td>Herido a bordo, avería</td></tr>
+          <tr><td><b>SÉCURITÉ</b></td><td>Seguridad</td><td>Avisos a la navegación o meteorológicos</td></tr>
+        </tbody>
+      </table></div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-radio"/></svg><div><b>VHF</b><p>Canal 16 (156,8 MHz) para socorro por voz. Canal 70 para la llamada selectiva digital (LSD/DSC).</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-phone"/></svg><div><b>Salvamento Marítimo</b><p>900 202 202, o el 112, que pasa la llamada.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-flare"/></svg><div><b>Señales de socorro</b><p>Bengalas y cohetes rojos, humo naranja, banderas N sobre C, mover los brazos despacio arriba y abajo.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-mob"/></svg><div><b>Hombre al agua</b><p>Grita «¡Hombre al agua!», lánzale un aro y no dejes de señalarlo.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m4-senalizacion">
+      <h3>Señalización de seguridad</h3>
+      <div class="signs">
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="5" fill="var(--sg)"/><path d="M26 12h12v14h14v12H38v14H26V38H12V26h14z" fill="var(--sw)"/></svg><b>Verde: salvamento</b><p>Primeros auxilios, salidas y equipos de salvamento.</p></div>
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="5" fill="var(--sg)"/><rect x="34" y="12" width="18" height="40" fill="none" stroke="var(--sw)" stroke-width="4"/><path d="M10 32h18M20 23l9 9-9 9" fill="none" stroke="var(--sw)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Verde: evacuación</b><p>Vías y salidas de emergencia.</p></div>
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="5" fill="var(--sr)"/><g fill="none" stroke="var(--sw)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(8 8)"><path d="M17 19h13v21a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2z" fill="var(--sw)"/><path d="M19 19v-6h9v6"/><path d="M28 10h8M23 13V9"/><path d="M19 15c-6 0-9 4-9 10v4"/></g></svg><b>Rojo: contra incendios</b><p>Extintores, mangueras, alarmas.</p></div>
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--sw)"/><rect x="14" y="29" width="30" height="7" fill="var(--sk)"/><rect x="44" y="29" width="6" height="7" fill="var(--sr)"/><circle cx="32" cy="32" r="26" fill="none" stroke="var(--sr)" stroke-width="7"/><path d="M14 14l36 36" stroke="var(--sr)" stroke-width="7"/></svg><b>Rojo: prohibición</b><p>Prohibido fumar, prohibido el paso.</p></div>
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--sb)"/><path d="M14 42h36M18 42c0-11 6-19 14-19s14 8 14 19z" fill="var(--sw)" stroke="var(--sw)" stroke-width="4" stroke-linejoin="round"/></svg><b>Azul: obligación</b><p>Uso obligatorio de casco, guantes, chaleco…</p></div>
+        <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 5l29 52H3z" fill="var(--sy)" stroke="var(--sk)" stroke-width="4" stroke-linejoin="round"/><path d="M32 23v17" stroke="var(--sk)" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="48" r="3.5" fill="var(--sk)"/></svg><b>Amarillo: advertencia</b><p>Peligro: electricidad, caídas, sustancias.</p></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m4-trabajo">
+      <h3>Trabajo seguro</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-gauge"/></svg><div><b>Espacios cerrados</b><p>Tanques, bodegas, cofferdams. Ventilar, medir la atmósfera (oxígeno normal: 21 %), permiso de entrada y vigilante fuera. Nunca entres a rescatar sin equipo de respiración autónomo.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-helmet"/></svg><div><b>Equipo de protección</b><p>Casco, botas, guantes y gafas según el trabajo. En altura o fuera de la borda, arnés amarrado y permiso.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-door"/></svg><div><b>Puertas estancas</b><p>Cerradas en navegación. En las de corredera, espera a que se abran del todo y no te quedes en el hueco.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m4-marpol">
+      <h3>Contaminación (MARPOL)</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Anexo</th><th>Regula</th></tr></thead>
+        <tbody>
+          <tr><td><b>I</b></td><td>Hidrocarburos</td></tr>
+          <tr><td><b>II</b></td><td>Sustancias nocivas líquidas a granel</td></tr>
+          <tr><td><b>III</b></td><td>Sustancias perjudiciales en bultos</td></tr>
+          <tr><td><b>IV</b></td><td>Aguas sucias</td></tr>
+          <tr><td><b>V</b></td><td>Basuras. Plásticos al mar: prohibido siempre</td></tr>
+          <tr><td><b>VI</b></td><td>Contaminación atmosférica</td></tr>
+        </tbody>
+      </table></div>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-oil"/></svg><div><b>Plan SOPEP</b><p>Plan de emergencia de a bordo en caso de contaminación por hidrocarburos: a quién avisar y qué hacer.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bin"/></svg><div><b>Basuras</b><p>Se separan y se anotan en el libro registro de basuras.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub" id="m4-stcw">
+      <h3>Descanso y alcohol</h3>
+      <div class="facts">
+        <div class="fact"><svg class="ico"><use href="#i-moon"/></svg><div><b>Descanso mínimo (STCW)</b><p>10 h en cada periodo de 24 h y 77 h en 7 días. Como mucho en dos periodos, uno de al menos 6 h.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-glass"/></svg><div><b>Alcohol</b><p>Límite STCW: 0,05 % en sangre o 0,25 mg/l en aire espirado. Cada país puede ser más estricto.</p></div></div>
+      </div>
+    </div>
+    <button class="btn go" data-start="m4">Hacer el test del módulo 4</button>
+  </section>
+
+  <!-- CAFÉ -->
+  <section id="cafe" class="stack">
+    <div class="sec-head">
+      <span class="tag">Apoya esta web</span>
+      <h2>Invítame a un café</h2>
+    </div>
+    <div class="cafe-box">
+      <svg class="ico" viewBox="0 0 48 48" style="stroke-width:2"><use href="#i-cup"/></svg>
+      <div>
+        <div class="price">1 €</div>
+        <p>Esta web es gratis para toda la clase. Si te ha ayudado a estudiar, puedes invitarme a un café.</p>
+        <div id="cafe-action"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<div id="quiz" class="gut" hidden><div class="col" id="qcol"></div></div>
+
+<footer class="gut">
+  <div class="col">
+    <p><b>Material de estudio, no oficial.</b> Resume las normas que fijan el curso. Si algo no coincide con el manual de tu centro, en su examen vale lo que diga su manual.</p>
+    <p>Basado en:</p>
+    <ul>
+      <li>Convenio STCW, regla VI/1 y cuadros A-VI/1-1 a A-VI/1-4; sección A-VIII/1 (descanso y alcohol)</li>
+      <li>Convenio SOLAS (capítulos II-2 y III) y Código IDS</li>
+      <li>MARPOL 73/78 y Reglamento de Abordajes (RIPA), anexo IV</li>
+      <li>Guías del Consejo Europeo de Resucitación (ERC 2021)</li>
+      <li><a href="https://cdn.juntadeandalucia.es/sites/default/files/2020-03/FORMACIONBASICA2019v2-B.pdf">Manual de Formación Básica en Seguridad, IFAPA, 2019</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script>
+/* ===== Enlace para donar. Pon aquí tu enlace (por ejemplo https://paypal.me/tuusuario/1EUR) ===== */
+const DONATION_URL = "";
+
+const MODS = {
+  1:{code:"A-VI/1-1", short:"Supervivencia", name:"Técnicas de supervivencia personal"},
+  2:{code:"A-VI/1-2", short:"Incendios", name:"Prevención y lucha contra incendios"},
+  3:{code:"A-VI/1-3", short:"Primeros auxilios", name:"Primeros auxilios básicos"},
+  4:{code:"A-VI/1-4", short:"Seguridad personal", name:"Seguridad personal y responsabilidades sociales"}
+};
+// En cada pregunta la opción correcta es la primera; el orden se baraja al mostrarla.
+const RAW = {
+1:[
+["¿Cuál es la señal de alarma general de emergencia a bordo?",["Siete o más pitidos cortos seguidos de uno largo","Un pitido largo continuo","Tres pitidos cortos repetidos","Dos pitidos largos y uno corto"],"La alarma general se da con 7 o más sonidos cortos seguidos de uno largo, por el pito del buque y el sistema de alarma. Al oírla, cada tripulante va a su puesto de reunión según el cuadro de obligaciones."],
+["¿Quién da la orden de abandonar el buque?",["El capitán","El jefe de máquinas","El oficial de guardia","Cualquier tripulante que vea peligro"],"Solo el capitán ordena el abandono. Antes de esa orden nadie debe abandonar el buque por su cuenta."],
+["Al saltar al agua con el chaleco puesto, ¿cuál es la técnica correcta?",["Pies primero, piernas juntas, mirando al frente, tapando nariz y boca con una mano y sujetando el chaleco con la otra","De cabeza, con los brazos extendidos","De espaldas, para que el chaleco amortigüe el golpe","Sentado, con las rodillas dobladas"],"Antes de saltar se comprueba que no hay nada debajo. Se sujeta el chaleco cruzando el brazo sobre el pecho para que no suba y golpee la barbilla."],
+["¿Para qué sirve la postura HELP en el agua?",["Para reducir la pérdida de calor cuando se está solo","Para nadar más rápido hacia la balsa","Para pedir ayuda a una aeronave","Para respirar mejor con oleaje"],"HELP (Heat Escape Lessening Posture): rodillas al pecho y brazos alrededor. Protege las zonas que más calor pierden: axilas, ingles y cuello."],
+["Si hay varios náufragos en el agua, ¿qué deben hacer?",["Agruparse en círculo, agarrados, para conservar calor y ser más visibles","Separarse para cubrir más área de búsqueda","Nadar todos hacia la costa más cercana","Quitarse los chalecos para moverse mejor"],"El grupo compacto reduce la pérdida de calor, da apoyo moral y se ve mejor desde el aire o desde un buque."],
+["Una vez a bordo de la balsa salvavidas, ¿cuál es una de las primeras acciones?",["Cortar la boza y alejarse del buque","Encender todas las bengalas","Repartir el agua y los víveres","Inflar el doble fondo y dormir"],"Acciones inmediatas: cortar la boza, alejarse del buque, recoger supervivientes y largar el ancla flotante. Después se mantiene la balsa: achicar, ventilar, cerrar entradas."],
+["¿Para qué sirve el ancla flotante (ancla de capa) de la balsa?",["Para reducir la deriva y estabilizar la balsa","Para fondear en aguas poco profundas","Para remolcar a otra balsa","Para recoger agua de lluvia"],"Frena la deriva, ayuda a quedarse cerca de la zona del siniestro, que es donde se buscará, y mantiene la balsa estable frente al oleaje."],
+["¿Cuándo se reparte agua en la balsa salvavidas?",["No en las primeras 24 horas, salvo a heridos o enfermos","Inmediatamente, a todos por igual","Solo cuando alguien lo pida","Cada hora, medio vaso por persona"],"El cuerpo tiene reservas para el primer día. Retrasar la ración alarga la supervivencia. Nunca se bebe agua de mar ni orina."],
+["¿Cuándo deben usarse las bengalas de mano?",["Solo cuando se avista un buque o una aeronave","Cada hora durante la noche","Nada más subir a la balsa","Para dar calor a los náufragos"],"Las señales pirotécnicas son pocas. Se usan cuando alguien puede verlas, sosteniéndolas fuera de la balsa y a sotavento."],
+["¿En qué frecuencia transmite la radiobaliza de localización de siniestros (RLS/EPIRB)?",["406 MHz, vía satélite COSPAS-SARSAT","156,8 MHz (canal 16)","2182 kHz","9 GHz, banda del radar"],"La RLS emite en 406 MHz, que detecta el sistema COSPAS-SARSAT y pasa la alerta y la posición a los centros de salvamento. También emite en 121,5 MHz para guiar a los rescatadores."],
+["¿Cómo aparece la señal del respondedor de radar (SART) en la pantalla de un radar?",["Como una línea de 12 puntos","Como un círculo parpadeante","Como un mensaje de texto","No aparece; solo emite sonido"],"El SART responde a los radares de 9 GHz (banda X) y se ve como una línea de 12 puntos. El SART está en el punto más cercano al centro de la pantalla."],
+["¿A partir de qué temperatura corporal se habla de hipotermia?",["Por debajo de 35 °C","Por debajo de 37 °C","Por debajo de 30 °C","Por debajo de 25 °C"],"Hipotermia es una temperatura del cuerpo inferior a 35 °C. En el agua el cuerpo pierde calor mucho más rápido que en el aire."],
+["¿Qué lleva un chaleco salvavidas homologado SOLAS?",["Luz, silbato y bandas retrorreflectantes","Una radiobaliza y una bengala","Una botella de aire","Un cuchillo y una linterna"],"La luz ayuda a localizarte de noche y el silbato sirve para llamar la atención. Las bandas retrorreflectantes brillan con los focos de búsqueda."],
+["¿Para qué sirve la zafa hidrostática de una balsa salvavidas?",["Suelta la balsa automáticamente si el buque se hunde, antes de 4 m de profundidad","Infla la balsa cuando se tira de la boza","Mantiene la balsa amarrada con mal tiempo","Desaliniza el agua de mar"],"Si no da tiempo a lanzarla, la zafa suelta la balsa al hundirse el buque. La balsa sube a la superficie y, al tensarse la boza, se infla."],
+["¿Cuánta agua dulce por persona lleva la dotación de una balsa salvavidas SOLAS?",["1,5 litros","0,5 litros","3 litros","5 litros"],"El Código IDS fija 1,5 l de agua por cada persona que pueda llevar la balsa, además de una ración de alimentos de 10.000 kJ."],
+["¿Qué señal es la más adecuada de día para que te vea una aeronave?",["La señal fumígena flotante de humo naranja","Una bengala de mano blanca","Una linterna","Un silbato"],"El humo naranja se ve bien de día, sobre todo desde el aire. De noche son mejores la bengala de mano roja y el cohete con paracaídas."],
+["¿Por qué se toman pastillas contra el mareo nada más subir a la balsa?",["Porque el vómito deshidrata y debilita","Porque quitan el hambre","Porque sustituyen al agua","Porque evitan la hipotermia"],"Incluso marinos con experiencia se marean en una balsa. Vomitar hace perder agua y sales, que en supervivencia son lo más valioso."],
+["Una balsa ha caído al agua volcada. ¿Cómo se adriza?",["Subiéndose por el lado de la botella de gas y tirando de la cincha de adrizamiento","Empujándola desde el lado contrario a la botella","Desinflándola y volviéndola a inflar","No se puede adrizar; hay que esperar al rescate"],"Encima de la botella de CO₂ y tirando de la cincha hacia atrás, la balsa gira y queda derecha."],
+["Hay que saltar a un mar con combustible ardiendo. ¿Por dónde se salta?",["Por barlovento, y alejarse nadando contra el viento","Por sotavento, donde el viento lleva el humo","Por cualquier lado, el viento no influye","Por la popa, cerca de la hélice"],"El viento empuja el combustible ardiendo hacia sotavento. Saltando por barlovento y nadando contra el viento te alejas de las llamas."],
+["¿Para qué sirve la ayuda térmica de la balsa?",["Para envolver a un náufrago y reducir su pérdida de calor","Para hacer señales de día","Para recoger agua de lluvia","Para tapar las entradas de la balsa"],"Es una bolsa de material de baja conductividad térmica. Reduce la pérdida de calor por convección y evaporación en personas mojadas o con frío."]
+],
+2:[
+["¿Qué elementos forman el tetraedro del fuego?",["Combustible, comburente (oxígeno), calor y reacción en cadena","Combustible, agua, calor y humo","Oxígeno, nitrógeno, calor y combustible","Combustible, chispa, humo y llama"],"Si se elimina cualquiera de los cuatro, el fuego se apaga. Cada agente extintor actúa sobre uno o varios de ellos."],
+["Un fuego de gasoil o de pintura es de clase…",["B","A","C","D"],"A: sólidos (madera, papel, trapos). B: líquidos inflamables. C: gases. D: metales. F: aceites de cocina."],
+["¿Por qué no se debe echar agua sobre una sartén de aceite ardiendo?",["Porque el agua se convierte en vapor de golpe y proyecta el aceite en llamas","Porque el agua conduce la electricidad","Porque el agua enfría demasiado rápido la sartén","Porque el agua aviva el humo"],"Se apaga la fuente de calor y se sofoca con la tapa o una manta ignífuga, o con un extintor de clase F."],
+["¿Cómo actúa principalmente el CO₂ como agente extintor?",["Por sofocación, desplazando el oxígeno","Por inhibición de la reacción en cadena","Solo por enfriamiento","Formando una capa de espuma"],"El CO₂ desplaza el oxígeno. Por eso es muy peligroso para las personas en espacios cerrados: puede causar asfixia."],
+["Antes de descargar el sistema fijo de CO₂ en la cámara de máquinas hay que…",["Evacuar a todo el personal y cerrar el espacio (puertas, ventilación, aberturas)","Abrir las puertas para que entre aire","Arrancar la ventilación forzada","Esperar a que el fuego se extienda"],"Se comprueba que no queda nadie dentro y se aísla el espacio para que el gas mantenga la concentración necesaria."],
+["¿Para qué tipo de fuego es especialmente adecuada la espuma?",["Líquidos inflamables (clase B)","Metales (clase D)","Equipos eléctricos con tensión","Gases a presión (clase C)"],"La espuma cubre la superficie del líquido, lo sofoca y evita que desprenda vapores. No se usa en equipos con tensión."],
+["¿Cómo actúa el polvo químico seco?",["Inhibe la reacción en cadena","Solo enfría","Solo diluye el oxígeno","Absorbe el humo"],"El polvo interrumpe químicamente la reacción en cadena de la combustión. Sirve para varias clases, pero ensucia y quita visibilidad."],
+["Al usar un extintor portátil, ¿hacia dónde se dirige el chorro?",["A la base de las llamas, con el viento a la espalda","A la parte alta de las llamas","Al humo","En círculos sobre todo el espacio"],"Se ataca la base, donde está el combustible, avanzando con el viento o la corriente de aire a favor."],
+["¿Cómo se transmite el calor de un local a otro a través de un mamparo de acero?",["Por conducción","Por convección","Por radiación","No se transmite"],"El acero conduce bien el calor. Por eso hay que enfriar los mamparos de alrededor (control de límites) para que el fuego no pase al local de al lado."],
+["¿Qué es el punto de inflamación de un líquido?",["La temperatura mínima a la que desprende vapores que arden en contacto con una llama","La temperatura a la que arde solo, sin llama","La temperatura de ebullición","La temperatura a la que se congela"],"En el punto de inflamación los vapores se encienden con una llama. La autoignición es arder sin ninguna llama externa."],
+["¿Qué es lo primero que se hace al descubrir un incendio?",["Dar la alarma","Ir a buscar el extintor más lejano","Abrir puertas para ventilar","Terminar el trabajo que se estaba haciendo"],"Primero la alarma. Después, si el fuego es pequeño y es seguro, se intenta apagar, y se cierran puertas para contenerlo."],
+["¿Cuál es la principal causa de muerte en los incendios?",["La inhalación de humo y gases tóxicos","Las quemaduras","Las explosiones","Las caídas"],"El monóxido de carbono y otros gases tóxicos incapacitan en poco tiempo. Por eso se avanza agachado y se entra con equipo de respiración autónomo."],
+["Cerrar la válvula de combustible que alimenta un fuego es extinguir por…",["Eliminación del combustible","Enfriamiento","Sofocación","Inhibición"],"Sin combustible el fuego no puede seguir. En fuegos de gas (clase C) es lo primero: si apagas la llama sin cortar el gas, puede haber una explosión."],
+["¿Cómo apaga el fuego el agua, sobre todo?",["Por enfriamiento","Por inhibición","Desplazando el combustible","Solo por sofocación"],"El agua absorbe mucho calor al calentarse y evaporarse. Pulverizada también sofoca un poco y protege al equipo de ataque."],
+["¿Qué agente NO se debe usar sobre un equipo eléctrico con tensión?",["Agua a chorro","CO₂","Polvo químico seco","Ninguno, todos sirven"],"El agua a chorro conduce la electricidad y te puedes electrocutar. Si se puede, primero se corta la corriente. Con tensión se usa CO₂ o polvo."],
+["Antes de abrir la puerta de un local donde puede haber fuego, ¿qué haces?",["Tocar la puerta con el dorso de la mano y abrir agachado, protegido por la puerta","Abrirla de golpe para ver el fuego","Romper el cristal","Abrirla de pie y entrar rápido"],"Si la puerta está caliente, hay fuego detrás. Al abrir, la entrada de aire puede provocar una llamarada, así que te proteges detrás de la puerta y agachado."],
+["¿Qué riesgo tienen los trapos con aceite o pintura amontonados?",["Combustión espontánea","Explosión por electricidad estática","Ninguno si están secos","Desprenden CO₂"],"Al oxidarse el aceite, los trapos se calientan solos hasta arder. Se guardan en recipientes metálicos cerrados."],
+["¿Cómo funcionan los rociadores automáticos (sprinklers)?",["Una ampolla de vidrio se rompe con el calor y deja salir el agua","Se activan a mano desde el puente","Descargan CO₂ en todo el buque","Se abren todos a la vez con un detector de humo"],"Cada rociador tiene una ampolla con un líquido que se dilata con el calor. Solo se abren los rociadores que están sobre el fuego."],
+["¿Para qué sirve la conexión internacional a tierra?",["Para unir las mangueras del buque con las de tierra aunque tengan acoplamientos distintos","Para conectar el buque a la red eléctrica del puerto","Para descargar el CO₂ a tierra","Para comunicarse por radio con el puerto"],"Es una brida normalizada por SOLAS. Permite que los bomberos de tierra o de otro buque den agua al colector contraincendios."],
+["¿Por qué se corta la ventilación de un local incendiado?",["Para quitarle oxígeno al fuego y que el humo no pase a otros espacios","Para que el humo salga más rápido","Para enfriar el local","Para que funcionen los detectores"],"La ventilación aporta oxígeno y lleva humo y calor a otros locales. Se paran ventiladores y se cierran puertas, rejillas y aberturas."]
+],
+3:[
+["¿Cuál es la secuencia de actuación ante un accidente?",["PAS: Proteger, Avisar, Socorrer","Socorrer, Avisar, Proteger","Avisar, Socorrer, Proteger","Trasladar, Avisar, Socorrer"],"Primero se asegura que el lugar no es peligroso para ti ni para la víctima, luego se avisa y después se atiende a la víctima."],
+["En la RCP de un adulto, ¿cuál es la relación compresiones–ventilaciones?",["30 compresiones y 2 ventilaciones","15 compresiones y 2 ventilaciones","5 compresiones y 1 ventilación","30 compresiones y 5 ventilaciones"],"30:2 en adultos. Si no sabes o no puedes ventilar, haz solo compresiones de forma continua."],
+["¿A qué ritmo se hacen las compresiones torácicas?",["100 a 120 por minuto","60 a 80 por minuto","140 a 160 por minuto","Unas 30 por minuto"],"Ritmo de 100 a 120 por minuto y profundidad de 5 a 6 cm en el centro del pecho, dejando que el tórax vuelva a su sitio. Algunos manuales antiguos dicen 80 a 100."],
+["¿Cuánto tiempo, como máximo, se dedica a comprobar si una víctima respira?",["10 segundos","30 segundos","1 minuto","2 minutos"],"Con la vía aérea abierta: ver, oír y sentir durante un máximo de 10 segundos. Si no respira con normalidad, se empieza la RCP."],
+["¿En qué caso se coloca a la víctima en posición lateral de seguridad?",["Inconsciente pero respira con normalidad","Consciente con una fractura de pierna","Inconsciente y sin respirar","Consciente con sospecha de lesión de columna"],"La posición lateral evita que el vómito o la lengua tapen la vía aérea. Hay que seguir comprobando la respiración."],
+["¿Qué es lo primero ante una hemorragia externa importante?",["Presión directa sobre la herida","Poner un torniquete de inmediato","Lavar la herida con agua abundante","Dar de beber a la víctima"],"Presión directa y firme, con gasas o un paño limpio. El torniquete queda para hemorragias de una extremidad que no se controlan así."],
+["Ante una quemadura por calor, ¿qué es correcto?",["Enfriar con agua corriente fresca durante al menos 20 minutos","Aplicar hielo directamente","Reventar las ampollas","Arrancar la ropa pegada a la piel"],"Agua corriente fresca, no helada, al menos 20 minutos, como indican las guías europeas de primeros auxilios (ERC 2021). Después se cubre con un apósito limpio. Ni hielo ni pomadas caseras."],
+["Un adulto consciente se atraganta y no puede toser ni hablar. ¿Qué haces?",["Alternar 5 golpes en la espalda y 5 compresiones abdominales","Darle agua","Esperar a que se le pase","Tumbarlo boca arriba y hacer RCP"],"Golpes entre los omóplatos y compresiones abdominales (maniobra de Heimlich), alternando. Si pierde la consciencia, se empieza la RCP."],
+["¿Cómo se trata una sospecha de fractura?",["Inmovilizar en la posición en que se encuentra, incluyendo las articulaciones de arriba y abajo","Intentar recolocar el hueso","Pedir a la víctima que mueva el miembro","Dar un masaje en la zona"],"No se recoloca la fractura. Se inmoviliza para evitar más daño y dolor, y se vigila la circulación por debajo de la lesión."],
+["Un náufrago rescatado tiene hipotermia. ¿Qué NO se debe hacer?",["Frotarle la piel y darle alcohol","Mantenerlo en horizontal","Quitarle la ropa mojada y abrigarlo","Moverlo con cuidado"],"Frotar y el alcohol abren los vasos de la piel y pueden empeorar la situación. El recalentamiento debe ser gradual."],
+["Una víctima está pálida, sudorosa, con pulso rápido y débil tras una hemorragia. ¿Qué haces?",["Tumbarla, elevar las piernas si no hay lesión y mantenerla abrigada","Sentarla y darle comida","Ponerla de pie para que camine","Darle agua fría en abundancia"],"Son signos de shock. Se controla la causa, se mantiene tumbada y abrigada, y se pide ayuda médica."],
+["Desde un buque español, ¿con quién se contacta para recibir consejo médico en la mar?",["Con el Centro Radio-Médico Español","Con la Capitanía Marítima","Con el armador","Con la Guardia Civil"],"El Centro Radio-Médico Español, del Instituto Social de la Marina, da asistencia médica a distancia las 24 horas."],
+["¿Con qué maniobra se abre la vía aérea de una víctima inconsciente?",["Frente-mentón: inclinar la cabeza hacia atrás y elevar el mentón","Girarle la cabeza hacia un lado","Meterle los dedos en la boca","Sentarla"],"En una persona inconsciente la lengua cae hacia atrás y tapa la vía aérea. Inclinar la cabeza y elevar el mentón la despeja."],
+["Si sospechas una lesión de columna, ¿cómo se mueve a la víctima?",["Solo si es imprescindible, en bloque, con cabeza, cuello y tronco alineados","Sentándola para que respire mejor","Doblándola por la cintura","Tirando de los brazos"],"Cualquier giro o flexión puede dañar la médula. Si hay que moverla, se hace entre varios, como un bloque."],
+["¿Cuándo se usa el desfibrilador (DEA)?",["En cuanto llegue, en una víctima que no responde y no respira con normalidad","Solo si lo manda un médico","Solo en víctimas conscientes","Después de 30 minutos de RCP"],"El DEA analiza el ritmo del corazón y solo da descarga si hace falta. Se siguen sus instrucciones y se continúa la RCP cuando lo indica."],
+["Ante una víctima de ahogamiento que no respira, ¿qué cambia en la RCP?",["Se empieza con 5 ventilaciones de rescate","Se hacen solo compresiones","Primero se pone boca abajo para sacar el agua","Se hacen 15 compresiones y 2 ventilaciones"],"En el ahogamiento el problema es la falta de oxígeno. Las guías europeas indican 5 ventilaciones iniciales y después 30:2. No se pierde tiempo intentando sacar agua."],
+["A alguien le sangra la nariz. ¿Qué se hace?",["Inclinar la cabeza un poco hacia delante y apretar la parte blanda de la nariz unos 10 minutos","Echar la cabeza hacia atrás","Tumbarse boca arriba","Taponar con algodón y seguir trabajando"],"Con la cabeza hacia atrás la sangre va a la garganta y al estómago, y puede provocar vómito."],
+["Si pones un torniquete, ¿qué es imprescindible?",["Anotar la hora a la que se puso","Aflojarlo cada 5 minutos","Taparlo con ropa para que no se vea","Ponerlo justo sobre una articulación"],"La hora le dice al médico cuánto tiempo lleva el miembro sin riego. Una vez puesto, no se afloja."],
+["Una persona se ha electrocutado y sigue tocando el cable. ¿Qué haces primero?",["Cortar la corriente antes de tocarla","Tirar de ella con las manos","Echarle agua","Empezar la RCP sin más"],"Si la tocas con corriente, te electrocutas tú también. Si no puedes cortarla, apártala con un objeto seco que no conduzca."],
+["Una persona tiene un objeto clavado en un ojo. ¿Qué haces?",["No sacarlo, tapar los dos ojos y pedir ayuda médica","Sacarlo con unas pinzas","Frotar el ojo para que salga","Lavarlo con alcohol"],"Se tapan los dos ojos porque se mueven a la vez. Así el ojo herido se mueve menos."]
+],
+4:[
+["¿Qué indica el cuadro de obligaciones y consignas?",["Las funciones de cada tripulante en emergencias y su puesto de reunión","Los turnos de comida","El inventario de víveres","La ruta prevista del buque"],"Está expuesto en lugares visibles del buque. Cada tripulante debe conocer su función y su puesto antes de que ocurra una emergencia."],
+["Según SOLAS, ¿con qué frecuencia participa cada tripulante en ejercicios de abandono y de lucha contra incendios?",["Al menos uno de cada al mes","Uno de cada al año","Solo al embarcar por primera vez","Uno de cada a la semana"],"Además, si más del 25 % de la tripulación no ha hecho un ejercicio en ese buque el último mes, se hace en las 24 horas siguientes a la salida. En buques de pasaje los ejercicios son semanales."],
+["Antes de entrar en un espacio cerrado (tanque, bodega), ¿qué es imprescindible?",["Ventilar, medir la atmósfera, tener permiso de entrada y un vigilante fuera","Entrar rápido y salir antes de 5 minutos","Llevar una linterna","Avisar solo al compañero de camarote"],"La atmósfera puede tener poco oxígeno o gases tóxicos o inflamables. Nunca se entra a rescatar sin equipo de respiración autónomo."],
+["¿Qué porcentaje de oxígeno se considera normal en la atmósfera?",["Alrededor del 21 %","Alrededor del 16 %","Alrededor del 30 %","Alrededor del 10 %"],"Con menos oxígeno aparecen mareo, confusión y pérdida de consciencia sin aviso. Por eso se mide antes de entrar."],
+["Según el MARPOL, ¿se pueden arrojar plásticos al mar?",["No, está prohibido en cualquier zona","Sí, a más de 12 millas de la costa","Sí, si están triturados","Solo fuera de zonas especiales"],"El Anexo V regula las basuras. Echar plásticos al mar está prohibido siempre."],
+["¿Qué convenio internacional fija la formación mínima de la gente de mar?",["STCW","SOLAS","MARPOL","COLREG"],"STCW: formación, titulación y guardia. SOLAS: seguridad de la vida en el mar. MARPOL: contaminación. COLREG: reglamento para prevenir abordajes."],
+["¿Cuántas horas de descanso mínimo exige el STCW?",["10 horas en cada periodo de 24 h y 77 horas en 7 días","8 horas en cada periodo de 24 h","6 horas en cada periodo de 24 h y 42 en 7 días","12 horas en cada periodo de 24 h"],"El descanso se puede dividir como mucho en dos periodos, y uno debe durar al menos 6 horas. La fatiga es un riesgo directo para la seguridad."],
+["¿Cuál es el límite de alcohol que fija el STCW para hacer guardia?",["0,05 % en sangre","0,5 % en sangre","0,15 % en sangre","0 %, tolerancia cero"],"El límite es 0,05 % en sangre o 0,25 mg/l en aire espirado. Cada país puede fijar uno más estricto."],
+["¿De qué color es la señalización de equipos y vías de salvamento y evacuación?",["Verde","Rojo","Azul","Amarillo"],"Verde: salvamento y salidas. Rojo: lucha contra incendios y prohibición. Azul: obligación. Amarillo: advertencia de peligro."],
+["Ves caer a alguien al agua. ¿Qué haces primero?",["Gritar «¡Hombre al agua!», lanzar un aro salvavidas y no perderlo de vista","Saltar inmediatamente a rescatarlo","Ir al puente a avisar sin mirar atrás","Buscar una cuerda en el pañol"],"Hay que dar la voz de alarma, lanzarle algo que flote y señalarlo todo el tiempo para que el puente pueda maniobrar."],
+["Al trabajar en altura o fuera de la borda, ¿qué es obligatorio?",["Arnés de seguridad amarrado a un punto firme y permiso de trabajo","Solo guantes","Avisar después de terminar","Hacerlo con el buque a toda máquina"],"Además del arnés, chaleco si hay riesgo de caer al agua, y siempre alguien vigilando."],
+["Los trabajos en caliente (soldadura, oxicorte) a bordo requieren…",["Permiso de trabajo, retirar combustibles cercanos y vigilancia contra incendios","Solo gafas de soldar","Que el buque esté en puerto","Cerrar la ventilación para que no entre aire"],"Muchos incendios a bordo empiezan en trabajos en caliente. La vigilancia contra incendios sigue un tiempo después de terminar."],
+["¿Cuál de estas NO es una señal de socorro?",["Ondear una bandera blanca","Una bengala de mano de luz roja","Una señal de humo naranja","Las banderas N sobre C del Código Internacional"],"Las señales de socorro del Reglamento de Abordajes (anexo IV) incluyen bengalas y cohetes rojos, humo naranja, las banderas N y C, mover los brazos despacio arriba y abajo y la llamada MAYDAY."],
+["¿Qué canal de VHF es el de socorro y llamada por voz?",["Canal 16","Canal 70","Canal 9","Canal 72"],"El canal 16 (156,8 MHz) es para socorro por voz. El canal 70 es para la llamada selectiva digital (LSD/DSC), que manda la alerta de forma automática."],
+["¿Qué significa la llamada MAYDAY?",["Peligro grave e inminente que requiere ayuda inmediata","Urgencia sin peligro inminente","Aviso de seguridad a la navegación","Prueba de radio"],"MAYDAY: socorro. PAN PAN: urgencia, por ejemplo un herido o una avería sin peligro inmediato. SÉCURITÉ: seguridad, avisos a la navegación o del tiempo."],
+["¿Cuál es el teléfono de emergencias de Salvamento Marítimo?",["900 202 202","091","062","010"],"Salvamento Marítimo coordina las emergencias en la mar en España. También se puede llamar al 112, que pasa la llamada."],
+["¿Qué regula el Anexo I del MARPOL?",["La contaminación por hidrocarburos","Las basuras","Las aguas sucias","La contaminación atmosférica"],"Anexo I hidrocarburos, II sustancias nocivas líquidas a granel, III sustancias en bultos, IV aguas sucias, V basuras, VI contaminación atmosférica."],
+["¿Qué es el plan SOPEP?",["El plan de emergencia de a bordo en caso de contaminación por hidrocarburos","El plan de protección del buque frente a amenazas","El plan de mantenimiento de máquinas","El plan de evacuación de pasajeros"],"Lo exige el MARPOL. Dice a quién avisar y qué hacer ante un derrame. La protección frente a amenazas es otro plan, el de protección del buque (Código PBIP)."],
+["¿Cómo deben estar las puertas estancas durante la navegación?",["Cerradas, salvo para pasar con permiso","Abiertas para facilitar la evacuación","Abiertas en la cámara de máquinas","Da igual"],"Las puertas estancas mantienen la flotabilidad si entra agua. En las de corredera, espera a que se abran del todo y no te quedes en el hueco."],
+["¿Qué diferencia hay entre el puesto de reunión y el puesto de embarco?",["En el de reunión se concentra la gente al oír la alarma; desde el de embarco se sube a la embarcación de supervivencia","Son lo mismo","El de embarco es el propio camarote","El de reunión está siempre en el puente"],"Los dos aparecen en el cuadro de obligaciones. Primero vas al puesto de reunión; si se ordena el abandono, al de embarco."]
+]};
+
+const Q=[];
+[1,2,3,4].forEach(m=>RAW[m].forEach((r,i)=>Q.push({id:m+"-"+(i+1),m,q:r[0],o:r[1],e:r[2]})));
+const byMod=m=>Q.filter(x=>x.m===m);
+
+// azar reproducible: todos los compañeros ven el mismo simulacro
+function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(a,r=Math.random){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+// 4 simulacros sin preguntas repetidas: 5 de cada módulo
+const SIMS=[[],[],[],[]];
+[1,2,3,4].forEach(m=>{const s=shuffle(byMod(m),rng(2026+m*17));for(let k=0;k<4;k++)SIMS[k].push(...s.slice(k*5,k*5+5))});
+SIMS.forEach((s,k)=>{SIMS[k]=shuffle(s,rng(900+k))});
+
+const KEY="fbs-fallos-v2";
+function loadMiss(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return []}}
+function saveMiss(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+const main=document.getElementById("main"),quiz=document.getElementById("quiz"),qcol=document.getElementById("qcol");
+
+function card(cls,k,t,d,attr){return `<button class="tcard ${cls}" ${attr}><span class="k">${k}</span><span class="t">${t}</span><span class="d">${d}</span></button>`}
+function buildCards(){
+  document.getElementById("g-sim").innerHTML=[0,1,2,3].map(k=>card("exam","Examen · 20 preguntas","Simulacro "+(k+1),"5 de cada módulo. Nota al final.",`data-start="s${k}"`)).join("");
+  document.getElementById("g-mod").innerHTML=[1,2,3,4].map(m=>card("","Módulo "+m+" · 20 preguntas",MODS[m].short,MODS[m].name,`data-start="m${m}"`)).join("");
+  const miss=loadMiss().filter(id=>Q.some(x=>x.id===id));
+  document.getElementById("g-more").innerHTML=
+    card("","Estudio · 20 preguntas","Aleatorio","Mezcla nueva de todos los módulos cada vez.",`data-start="rnd"`)+
+    card("","Estudio · "+(miss.length||"sin")+" fallos","Repasar fallos",miss.length?"Las que fallaste. Al acertarlas, salen de la lista.":"Aún no tienes fallos guardados en este móvil.",`data-start="miss" ${miss.length?"":"disabled style=\"opacity:.55;cursor:default\""}`);
+}
+
+function startById(id){
+  if(id[0]==="s"){const k=+id.slice(1);start(SIMS[k],"Simulacro "+(k+1),"exam",rng(5000+k));return}
+  if(id[0]==="m"){const m=+id.slice(1);start(shuffle(byMod(m)),"Módulo "+m+" · "+MODS[m].short,"study");return}
+  if(id==="rnd"){start(shuffle(Q).slice(0,20),"Aleatorio","study");return}
+  if(id==="miss"){const miss=loadMiss();const l=Q.filter(x=>miss.includes(x.id));if(l.length)start(shuffle(l),"Repaso de fallos","study")}
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-start]");
+  if(b&&!b.disabled){startById(b.dataset.start);return}
+  const a=e.target.closest("a[href^='#']");
+  if(a&&!quiz.hidden)exitQuiz(false);
+});
+
+let S=null;
+function start(list,label,mode,r){
+  const rr=r||Math.random;
+  S={list:list.map(x=>({...x,order:shuffle([0,1,2,3],rr)})),i:0,label,mode,ans:[]};
+  main.hidden=true;quiz.hidden=false;render();window.scrollTo({top:0,behavior:"auto"});
+}
+function exitQuiz(scroll=true){
+  quiz.hidden=true;main.hidden=false;S=null;buildCards();
+  if(scroll)document.getElementById("tests").scrollIntoView({behavior:"auto"});
+}
+
+function render(){
+  const it=S.list[S.i],n=S.list.length,exam=S.mode==="exam";
+  qcol.innerHTML=`
+  <div class="meta"><span>${esc(S.label)}${exam?" · modo examen":""}</span><button class="exit" id="exit">Salir</button></div>
+  <div class="bar"><i style="width:${(S.i/n)*100}%"></i></div>
+  <div class="meta"><span class="tag" style="font-size:12px">${MODS[it.m].code} · ${MODS[it.m].short}</span><span>${S.i+1} / ${n}</span></div>
+  <p class="q">${esc(it.q)}</p>
+  <div class="opts">${it.order.map((oi,k)=>`<button class="opt" id="o${k}" data-oi="${oi}"><span class="k">${"ABCD"[k]}</span><span>${esc(it.o[oi])}</span></button>`).join("")}</div>
+  <div id="after" class="stack"></div>`;
+  qcol.querySelector("#exit").onclick=()=>exitQuiz();
+  qcol.querySelectorAll(".opt").forEach(b=>b.onclick=()=>exam?pick(b):answer(b));
+  if(exam&&S.ans[S.i]!=null){const b=qcol.querySelector(`.opt[data-oi="${S.ans[S.i]}"]`);if(b)pick(b)}
+}
+
+function nextBtn(label){
+  const after=qcol.querySelector("#after");
+  after.insertAdjacentHTML("beforeend",`<button class="btn primary next" id="next"><span>${label}</span><span aria-hidden="true">→</span></button>`);
+  const nx=after.querySelector("#next");
+  nx.onclick=()=>{if(S.i===S.list.length-1)result();else{S.i++;render();window.scrollTo({top:0,behavior:"auto"})}};
+  return nx;
+}
+
+function pick(btn){
+  qcol.querySelectorAll(".opt").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel");S.ans[S.i]=+btn.dataset.oi;
+  if(!qcol.querySelector("#next"))nextBtn(S.i===S.list.length-1?"Entregar y ver nota":"Siguiente");
+}
+
+function record(it,ok){
+  let miss=loadMiss();
+  if(ok)miss=miss.filter(id=>id!==it.id);else if(!miss.includes(it.id))miss.push(it.id);
+  saveMiss(miss);
+}
+
+function answer(btn){
+  const it=S.list[S.i],chosen=+btn.dataset.oi,ok=chosen===0;
+  qcol.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(+b.dataset.oi===0)b.classList.add("ok")});
+  if(!ok)btn.classList.add("bad");
+  S.ans[S.i]=chosen;record(it,ok);
+  const after=qcol.querySelector("#after");
+  after.innerHTML=`<div class="exp"><b class="${ok?"ok":"bad"}">${ok?"Correcto":"Incorrecto"}</b><p>${esc(it.e)}</p></div>`;
+  const nx=nextBtn(S.i===S.list.length-1?"Ver resultado":"Siguiente");
+  nx.focus({preventScroll:true});
+  after.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+}
+
+function result(){
+  const n=S.list.length;let right=0;const wrong=[];const per={};
+  S.list.forEach((it,i)=>{const a=S.ans[i];const ok=a===0;per[it.m]=per[it.m]||[0,0];per[it.m][1]++;if(ok){right++;per[it.m][0]++}else wrong.push({it,a});if(S.mode==="exam")record(it,ok)});
+  const pct=Math.round(right/n*100);
+  const msg=pct>=90?"Muy bien preparado.":pct>=70?"Vas bien. Repasa los fallos de abajo.":"Toca repasar la teoría de los módulos donde más fallas.";
+  const mods=Object.keys(per);
+  const list=S.list.map(x=>Q.find(q=>q.id===x.id)),label=S.label,mode=S.mode;
+  qcol.innerHTML=`
+  <div class="meta"><span>${esc(label)} · resultado</span><button class="exit" id="exit">Salir</button></div>
+  <div class="score">${right}<small> / ${n}</small></div>
+  <p class="lead">${pct} % de aciertos. ${msg}</p>
+  ${mods.length>1?`<div class="bymod">${mods.map(m=>`<div><span>Módulo ${m} · ${MODS[m].short}</span><b>${per[m][0]} / ${per[m][1]}</b></div>`).join("")}</div>`:""}
+  <div class="hero"><div class="row" style="margin:0">
+    <button class="btn primary" id="again">Repetir</button>
+    <button class="btn" id="home">Volver a los tests</button>
+  </div></div>
+  ${wrong.length?`<h3>Tus fallos</h3><div class="stack" style="gap:10px">${wrong.map(w=>`
+    <div class="rv"><span class="mt">${MODS[w.it.m].code} · ${MODS[w.it.m].short}</span>
+      <p>${esc(w.it.q)}</p>
+      <p class="you">Tu respuesta: ${w.a==null?"sin responder":esc(w.it.o[w.a])}</p>
+      <p class="right">Correcta: ${esc(w.it.o[0])}</p>
+      <p class="why">${esc(w.it.e)}</p>
+    </div>`).join("")}</div>`:`<p>Sin fallos. Muy bien.</p>`}`;
+  qcol.querySelector("#exit").onclick=()=>exitQuiz();
+  qcol.querySelector("#home").onclick=()=>exitQuiz();
+  qcol.querySelector("#again").onclick=()=>{const k=label.match(/^Simulacro (\d)/);if(k)startById("s"+(k[1]-1));else start(shuffle(list),label,mode)};
+  window.scrollTo({top:0,behavior:"auto"});
+}
+
+// café
+(function(){
+  const box=document.getElementById("cafe-action");
+  if(DONATION_URL){
+    box.innerHTML=`<a class="btn primary" href="${esc(DONATION_URL)}" target="_blank" rel="noopener">Invitar a un café · 1 €</a><p class="note">Se abre la página de pago en una pestaña nueva.</p>`;
+  }else{
+    box.innerHTML=`<button class="btn primary" disabled>Invitar a un café · 1 €</button><p class="note">El enlace para invitar estará disponible muy pronto.</p>`;
+  }
+})();
+
+buildCards();
+</script>
+
+</body>
+</html>
