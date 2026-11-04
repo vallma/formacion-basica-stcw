@@ -4,4 +4,4 @@ Web de estudio para el curso de Formación Básica en Seguridad: teoría resumid
 
 Material de estudio no oficial. Si algo no coincide con el manual de tu centro, en su examen vale lo que diga su manual.
 
-Para activar el botón de "Invítame a un café", pon tu enlace en la constante `DONATION_URL` de `index.html`.
+El botón de "Invítame a un café" usa el enlace de la constante `DONATION_URL` de `index.html`.
