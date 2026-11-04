@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Teoría resumida y tests para preparar el examen de Formación Básica en Seguridad (STCW).">
+<meta name="description" content="Apuntes y tests para preparar el examen de Formación Básica en Seguridad (STCW).">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Test de Formación Básica STCW</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&family=Caveat:wght@600;700&display=swap">
 <style>
 /* Layout: columna de lectura de 760px; franja naranja SOLAS como única nota fuerte; señales de seguridad con sus colores normalizados */
 :root{
@@ -21,13 +21,17 @@
   --display:"Barlow Condensed","Arial Narrow",sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --hand:"Caveat","Segoe Print","Bradley Hand",cursive;
+  --mark:rgba(255,193,7,.45); --note:#FFE98A; --note-ink:#2B2416; --note-edge:#E8CC55;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --mark:rgba(255,160,60,.30);
   --sea1:#2E6AA0; --sea2:#1F4A70; --sea3:#14304A; --hull:#5A7A9C; --deck:#DCE6F0;
   --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
   --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
   --ok:#5CCB94; --ok-bg:#12301F; --bad:#F27D74; --bad-bg:#3A1714; color-scheme:dark}}
 :root[data-theme="dark"]{
+  --mark:rgba(255,160,60,.30);
   --sea1:#2E6AA0; --sea2:#1F4A70; --sea3:#14304A; --hull:#5A7A9C; --deck:#DCE6F0;
   --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
   --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
@@ -147,9 +151,9 @@ td b{font-weight:600}
 .sign p{font-size:14px;color:var(--muted)}
 
 /* RCP */
-.bignums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
-.bignum{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:2px}
-.bignum span{font-family:var(--display);font-weight:700;font-size:40px;line-height:1;font-variant-numeric:tabular-nums}
+.bignums{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.bignum{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 10px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.bignum span{font-family:var(--display);font-weight:700;font-size:clamp(24px,6.5vw,40px);line-height:1;font-variant-numeric:tabular-nums}
 .bignum small{font-size:14px;color:var(--muted)}
 
 /* escala de hipotermia */
@@ -190,6 +194,25 @@ td b{font-weight:600}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
 @keyframes drift{to{transform:translate(46px,-6px)}}
 @keyframes puff{0%{transform:translate(0,0) scale(.6);opacity:.75}100%{transform:translate(-28px,-34px) scale(2);opacity:0}}
+
+/* toque de apuntes a mano */
+mark{background:linear-gradient(transparent 52%,var(--mark) 52%,var(--mark) 90%,transparent 90%);color:inherit;padding:0 .12em;border-radius:2px}
+.hand{font-family:var(--hand);font-weight:700;font-size:24px;line-height:1.15;color:var(--solas);transform:rotate(-1.2deg);transform-origin:left center;max-width:34ch}
+.hand.small{font-size:21px}
+.facts{column-gap:28px;row-gap:0}
+.fact{background:none;border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:12px 0;grid-template-columns:38px 1fr}
+.fact .ico{width:34px;height:34px}
+.sec-head h2{position:relative}
+.postit{background:var(--note);color:var(--note-ink);padding:22px 22px 24px;max-width:430px;transform:rotate(-1.6deg);box-shadow:0 1px 0 var(--note-edge),0 14px 24px -14px rgba(0,0,0,.45);border-radius:2px 2px 18px 2px;display:flex;flex-direction:column;gap:10px;position:relative;margin:8px 0 8px 4px}
+.postit::before{content:"";position:absolute;top:-12px;left:50%;width:96px;height:24px;margin-left:-48px;background:rgba(255,255,255,.55);transform:rotate(2deg);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.postit .hand{color:var(--note-ink);transform:none;font-size:34px;max-width:none}
+.postit p{color:var(--note-ink)}
+.postit .price{font-family:var(--hand);font-size:56px;line-height:.9;color:#B8430A}
+.postit .note{color:#5A4E30}
+.postit .btn.primary{align-self:flex-start;background:#1C2B3A;border-color:#1C2B3A;color:#FFFFFF}
+.postit .btn:disabled{opacity:.6}
+.postit svg{position:absolute;right:16px;top:18px;width:54px;height:54px;color:#B8430A;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sign-off{font-family:var(--hand);font-size:24px;color:var(--ink)}
 .go{align-self:flex-start}
 main > *,.stack > *,.mod > *,.sub > *,.duo > *,.hero > *{min-width:0}
 .figure svg{width:100%}
@@ -311,11 +334,9 @@ footer ul{margin:0;padding-left:18px}
 
   <section id="inicio" class="hero-wrap">
     <div class="hero">
-    <span class="tag">STCW · Regla VI/1 · Sección A-VI/1</span>
-    <h1>Formación Básica en Seguridad</h1>
-    <div class="stripe"></div>
-    <p class="lead">Teoría resumida y tests para preparar el examen del curso. Hecho para repasar entre clases, desde el móvil.</p>
-    <div class="facts-line"><span>4 módulos</span><span>80 preguntas</span><span>4 simulacros</span></div>
+    <p class="hand small">mis apuntes del curso ✎</p>
+    <h1>Formación Básica en <mark>Seguridad</mark></h1>
+    <p class="lead">Lo fui montando mientras estudiaba para el examen y lo comparto con la clase. Hay un resumen de la teoría de los cuatro módulos y 80 preguntas para practicar, con cuatro simulacros tipo examen. Si veis algún error, decídmelo y lo corrijo.</p>
     <div class="row">
       <a class="btn primary" href="#tests">Hacer un test</a>
       <a class="btn" href="#teoria">Repasar la teoría</a>
@@ -354,9 +375,8 @@ footer ul{margin:0;padding-left:18px}
   <!-- TESTS -->
   <section id="tests" class="stack">
     <div class="sec-head">
-      <span class="tag">Practica</span>
       <h2>Tests</h2>
-      <p class="lead">En los tests por módulo ves la respuesta al momento. En los simulacros no hay corrección hasta el final, como en el examen.</p>
+      <p class="lead">Los tests por módulo te corrigen cada pregunta al momento. Los simulacros van como el examen: contestas todo y ves la nota al final. Los simulacros son iguales para todos, así que podemos comentarlos en clase.</p>
     </div>
     <div class="group-label">Simulacros de examen</div>
     <div class="grid" id="g-sim"></div>
@@ -369,9 +389,8 @@ footer ul{margin:0;padding-left:18px}
   <!-- TEORÍA -->
   <section id="teoria" class="stack">
     <div class="sec-head">
-      <span class="tag">Estudia</span>
       <h2>Teoría</h2>
-      <p class="lead">Lo esencial de cada módulo, con los datos que más se preguntan.</p>
+      <p class="lead">Lo esencial de cada módulo. Lo subrayado y las notas a mano son lo que a mí me costó más recordar.</p>
     </div>
     <nav class="toc" aria-label="Índice de la teoría">
       <div><span class="code">Módulo 1 · A-VI/1-1</span><a class="mt" href="#m1">Supervivencia personal</a>
@@ -394,7 +413,7 @@ footer ul{margin:0;padding-left:18px}
       <h3>Señales y abandono</h3>
       <div class="figure">
         <div class="sig" aria-label="Siete pitidos cortos y uno largo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><b></b></div>
-        <figcaption><b>Alarma general de emergencia:</b> siete o más pitidos cortos seguidos de uno largo, con el pito del buque y los timbres. Al oírla, vas a tu puesto de reunión.</figcaption>
+        <figcaption><b>Alarma general de emergencia:</b> <mark>siete o más pitidos cortos seguidos de uno largo</mark>, con el pito del buque y los timbres. Al oírla, vas a tu puesto de reunión.</figcaption>
       </div>
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Solo el capitán ordena el abandono</b><p>Hasta esa orden nadie deja el buque. Un abandono precipitado es muy peligroso.</p></div></div>
@@ -411,7 +430,7 @@ footer ul{margin:0;padding-left:18px}
         <div class="fact"><svg class="ico"><use href="#i-ring"/></svg><div><b>Aro salvavidas</b><p>Se lanza a quien cae al agua. Algunos llevan luz de encendido automático y señal fumígena.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-suit"/></svg><div><b>Traje de inmersión</b><p>Reduce la pérdida de calor en agua fría. Algunos necesitan llevar el chaleco encima.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Ayuda térmica</b><p>Bolsa que envuelve al náufrago y reduce la pérdida de calor por convección y evaporación.</p></div></div>
-        <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Balsa salvavidas</b><p>Se infla al tirar de la boza. Lleva 1,5 l de agua por persona y una ración de alimentos de 10.000 kJ.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Balsa salvavidas</b><p>Se infla al tirar de la boza. Lleva <mark>1,5 l de agua</mark> por persona y una ración de alimentos de 10.000 kJ.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-hru"/></svg><div><b>Zafa hidrostática</b><p>Si el buque se hunde, suelta la balsa antes de los 4 m de profundidad. La balsa sube y se infla sola.</p></div></div>
       </div>
     </div>
@@ -429,6 +448,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="sub" id="m1-balsa">
       <h3>En la balsa</h3>
       <p>Las acciones inmediatas al subir, en este orden:</p>
+      <p class="hand">cortar, alejarse, ancla, cerrar, mantener… ¡en ese orden!</p>
       <div class="steps">
         <div class="step"><svg class="ico"><use href="#i-cut"/></svg><span class="n">1</span><b>Cortar</b><p>La boza, con el cuchillo de la balsa.</p></div>
         <div class="step"><svg class="ico"><use href="#i-away"/></svg><span class="n">2</span><b>Alejarse</b><p>Del buque, recogiendo supervivientes.</p></div>
@@ -437,7 +457,7 @@ footer ul{margin:0;padding-left:18px}
         <div class="step"><svg class="ico"><use href="#i-bucket"/></svg><span class="n">5</span><b>Mantener</b><p>Achicar, inflar el doble fondo, ventilar.</p></div>
       </div>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Agua</b><p>Nada en las primeras 24 h salvo heridos o enfermos. Después, unos 0,5 l al día repartidos en varias tomas. Nunca agua de mar ni orina.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Agua</b><p><mark>Nada en las primeras 24 h</mark> salvo heridos o enfermos. Después, unos 0,5 l al día repartidos en varias tomas. Nunca agua de mar ni orina.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-pill"/></svg><div><b>Pastillas contra el mareo</b><p>En cuanto subes. Vomitar deshidrata y debilita.</p></div></div>
       </div>
     </div>
@@ -454,10 +474,10 @@ footer ul{margin:0;padding-left:18px}
             <circle cx="60" cy="60" r="2.5" fill="var(--ink)"/>
             <g fill="var(--solas)"><circle cx="66" cy="60" r="2"/><circle cx="70.5" cy="60" r="2"/><circle cx="75" cy="60" r="2"/><circle cx="79.5" cy="60" r="2"/><circle cx="84" cy="60" r="2"/><circle cx="88.5" cy="60" r="2"/><circle cx="93" cy="60" r="2"/><circle cx="97.5" cy="60" r="2"/><circle cx="102" cy="60" r="2"/><circle cx="106.5" cy="60" r="2"/><circle cx="111" cy="60" r="2"/><circle cx="115.5" cy="60" r="2"/></g>
           </svg>
-          <figcaption><b>SART</b> (respondedor de radar, 9 GHz): aparece en el radar de un buque como una línea de 12 puntos. El SART está en el punto más cercano al centro.</figcaption>
+          <figcaption><b>SART</b> (respondedor de radar, 9 GHz): aparece en el radar de un buque como <mark>una línea de 12 puntos</mark>. El SART está en el punto más cercano al centro.</figcaption>
         </figure>
         <div class="stack" style="gap:10px">
-          <div class="fact"><svg class="ico"><use href="#i-epirb"/></svg><div><b>Radiobaliza (RLS / EPIRB)</b><p>Emite en 406 MHz al sistema de satélites COSPAS-SARSAT, con tu posición. Usa 121,5 MHz para guiar a los rescatadores en la zona.</p></div></div>
+          <div class="fact"><svg class="ico"><use href="#i-epirb"/></svg><div><b>Radiobaliza (RLS / EPIRB)</b><p>Emite en <mark>406 MHz</mark> al sistema de satélites COSPAS-SARSAT, con tu posición. Usa 121,5 MHz para guiar a los rescatadores en la zona.</p></div></div>
           <div class="fact"><svg class="ico"><use href="#i-flare"/></svg><div><b>Bengalas y cohetes</b><p>Bengala de mano roja y cohete con paracaídas rojo, mejor de noche. Solo cuando veas un buque o una aeronave, y a sotavento.</p></div></div>
           <div class="fact"><svg class="ico"><use href="#i-smoke"/></svg><div><b>Señal fumígena</b><p>Humo naranja. Se ve bien de día, sobre todo desde el aire.</p></div></div>
         </div>
@@ -467,7 +487,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="sub" id="m1-peligros">
       <h3>Peligros del náufrago</h3>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Hipotermia</b><p>Temperatura del cuerpo por debajo de 35 °C. En el agua se pierde calor muchas veces más rápido que en el aire.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-thermo"/></svg><div><b>Hipotermia</b><p>Temperatura del cuerpo <mark>por debajo de 35 °C</mark>. En el agua se pierde calor muchas veces más rápido que en el aire.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Deshidratación</b><p>Por mareo, sudor o beber agua de mar. Racionar el agua desde el segundo día.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-shield"/></svg><div><b>Pánico y desánimo</b><p>Organización, rutinas y tareas para todos. Se nombra un responsable del agua.</p></div></div>
       </div>
@@ -522,6 +542,7 @@ footer ul{margin:0;padding-left:18px}
         <div class="cls"><div class="l"><span>D</span><svg class="ico"><use href="#i-ingot"/></svg></div><b>Metales</b><p>Magnesio, sodio, aluminio en polvo. Polvo especial.</p></div>
         <div class="cls"><div class="l"><span>F</span><svg class="ico"><use href="#i-pan"/></svg></div><b>Aceites de cocina</b><p>Freidoras y sartenes. Nunca agua.</p></div>
       </div>
+      <p class="hand">A sólidos, B líquidos, C gases, D metales… y F de freidora</p>
       <p class="cap" style="text-align:left">Clasificación europea (norma EN 2). Algunos manuales antiguos traen las clases C y D cambiadas: C son gases y D metales.</p>
     </div>
 
@@ -550,7 +571,7 @@ footer ul{margin:0;padding-left:18px}
         <div class="step"><svg class="ico"><use href="#i-drop"/></svg><span class="n">4</span><b>Límites</b><p>Enfriar mamparos y cubiertas vecinas.</p></div>
       </div>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-ext"/></svg><div><b>Extintor portátil</b><p>A la base de las llamas, con el viento o la corriente de aire a la espalda.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-ext"/></svg><div><b>Extintor portátil</b><p><mark>A la base de las llamas</mark>, con el viento o la corriente de aire a la espalda.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-hand"/></svg><div><b>Puerta sospechosa</b><p>Tócala con el dorso de la mano. Si está caliente, ábrela agachado y protegido detrás de ella.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-pan"/></svg><div><b>Sartén ardiendo</b><p>Apaga el fuego de la cocina y tapa la sartén o usa la manta ignífuga. El agua proyecta el aceite en llamas.</p></div></div>
       </div>
@@ -584,7 +605,7 @@ footer ul{margin:0;padding-left:18px}
       </div>
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-eye"/></svg><div><b>¿Responde?</b><p>Háblale y sacúdele suavemente los hombros.</p></div></div>
-        <div class="fact"><svg class="ico"><use href="#i-lungs"/></svg><div><b>Abre la vía aérea y mira si respira</b><p>Maniobra frente-mentón. Ver, oír y sentir, como máximo 10 segundos.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-lungs"/></svg><div><b>Abre la vía aérea y mira si respira</b><p>Maniobra frente-mentón. Ver, oír y sentir, <mark>como máximo 10 segundos</mark>.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-huddle"/></svg><div><b>Inconsciente pero respira</b><p>Posición lateral de seguridad, y sigue comprobando la respiración.</p></div></div>
       </div>
     </div>
@@ -597,6 +618,7 @@ footer ul{margin:0;padding-left:18px}
         <div class="bignum"><span>100–120</span><small>compresiones por minuto</small></div>
         <div class="bignum"><span>5–6 cm</span><small>de profundidad, centro del pecho</small></div>
       </div>
+      <p class="hand">truco: el ritmo de «La Macarena» sale a unas 100 por minuto</p>
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-bolt"/></svg><div><b>DEA</b><p>Úsalo en cuanto llegue y sigue sus instrucciones de voz. Solo da descarga si hace falta.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-mob"/></svg><div><b>Ahogados</b><p>Empieza con 5 ventilaciones de rescate y luego 30:2. No intentes sacar el agua de los pulmones.</p></div></div>
@@ -607,7 +629,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="sub" id="m3-hemorragias">
       <h3>Hemorragias y shock</h3>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Presión directa</b><p>Lo primero ante una hemorragia: apretar fuerte sobre la herida con gasas o un paño limpio.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-drop"/></svg><div><b>Presión directa</b><p>Lo primero ante una hemorragia: <mark>apretar fuerte</mark> sobre la herida con gasas o un paño limpio.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Torniquete</b><p>Solo en una extremidad que no para de sangrar con presión. Anota la hora y no lo aflojes.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-eye"/></svg><div><b>Nariz</b><p>Cabeza un poco hacia delante y aprieta la parte blanda unos 10 minutos. Nunca hacia atrás.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-heart"/></svg><div><b>Shock</b><p>Pálido, sudoroso, pulso rápido y débil. Túmbalo, eleva las piernas si no hay lesión, abrígalo y pide ayuda.</p></div></div>
@@ -617,7 +639,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="sub" id="m3-quemaduras">
       <h3>Quemaduras</h3>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-fire"/></svg><div><b>Por calor</b><p>Agua corriente fresca, no helada, al menos 20 minutos. Cubre con un apósito limpio. Ni hielo, ni pomadas, ni reventar ampollas, ni arrancar la ropa pegada.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-fire"/></svg><div><b>Por calor</b><p>Agua corriente fresca, no helada, <mark>al menos 20 minutos</mark>. Cubre con un apósito limpio. Ni hielo, ni pomadas, ni reventar ampollas, ni arrancar la ropa pegada.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-oil"/></svg><div><b>Químicas</b><p>Quita la ropa contaminada y lava con agua abundante unos 20 minutos.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-bolt"/></svg><div><b>Eléctricas</b><p>Corta la corriente antes de tocar a la víctima. Si no puedes, apártala con algo seco que no conduzca.</p></div></div>
       </div>
@@ -658,7 +680,7 @@ footer ul{margin:0;padding-left:18px}
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-list"/></svg><div><b>Cuadro de obligaciones y consignas</b><p>Dice qué hace cada tripulante en cada emergencia y dónde va. Está expuesto en sitios visibles.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-raft"/></svg><div><b>Reunión y embarco</b><p>Puesto de reunión: donde te concentras al oír la alarma. Puesto de embarco: desde donde subes a la embarcación de supervivencia.</p></div></div>
-        <div class="fact"><svg class="ico"><use href="#i-bell"/></svg><div><b>Ejercicios (SOLAS)</b><p>Cada tripulante, uno de abandono y uno de incendio al mes. Si más del 25 % no ha hecho ninguno en ese buque el último mes, se hacen en las 24 h tras salir de puerto. En pasaje, cada semana.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-bell"/></svg><div><b>Ejercicios (SOLAS)</b><p>Cada tripulante, <mark>uno de abandono y uno de incendio al mes</mark>. Si más del 25 % no ha hecho ninguno en ese buque el último mes, se hacen en las 24 h tras salir de puerto. En pasaje, cada semana.</p></div></div>
       </div>
     </div>
 
@@ -674,7 +696,7 @@ footer ul{margin:0;padding-left:18px}
       </table></div>
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-radio"/></svg><div><b>VHF</b><p>Canal 16 (156,8 MHz) para socorro por voz. Canal 70 para la llamada selectiva digital (LSD/DSC).</p></div></div>
-        <div class="fact"><svg class="ico"><use href="#i-phone"/></svg><div><b>Salvamento Marítimo</b><p>900 202 202, o el 112, que pasa la llamada.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-phone"/></svg><div><b>Salvamento Marítimo</b><p><mark>900 202 202</mark>, o el 112, que pasa la llamada.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-flare"/></svg><div><b>Señales de socorro</b><p>Bengalas y cohetes rojos, humo naranja, banderas N sobre C, mover los brazos despacio arriba y abajo.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-mob"/></svg><div><b>Hombre al agua</b><p>Grita «¡Hombre al agua!», lánzale un aro y no dejes de señalarlo.</p></div></div>
       </div>
@@ -682,6 +704,7 @@ footer ul{margin:0;padding-left:18px}
 
     <div class="sub" id="m4-senalizacion">
       <h3>Señalización de seguridad</h3>
+      <p class="hand">verde te salva, rojo es fuego o prohibido, azul es obligatorio, amarillo es ¡cuidado!</p>
       <div class="signs">
         <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="5" fill="var(--sg)"/><path d="M26 12h12v14h14v12H38v14H26V38H12V26h14z" fill="var(--sw)"/></svg><b>Verde: salvamento</b><p>Primeros auxilios, salidas y equipos de salvamento.</p></div>
         <div class="sign"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="5" fill="var(--sg)"/><rect x="34" y="12" width="18" height="40" fill="none" stroke="var(--sw)" stroke-width="4"/><path d="M10 32h18M20 23l9 9-9 9" fill="none" stroke="var(--sw)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Verde: evacuación</b><p>Vías y salidas de emergencia.</p></div>
@@ -695,7 +718,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="sub" id="m4-trabajo">
       <h3>Trabajo seguro</h3>
       <div class="facts">
-        <div class="fact"><svg class="ico"><use href="#i-gauge"/></svg><div><b>Espacios cerrados</b><p>Tanques, bodegas, cofferdams. Ventilar, medir la atmósfera (oxígeno normal: 21 %), permiso de entrada y vigilante fuera. Nunca entres a rescatar sin equipo de respiración autónomo.</p></div></div>
+        <div class="fact"><svg class="ico"><use href="#i-gauge"/></svg><div><b>Espacios cerrados</b><p>Tanques, bodegas, cofferdams. Ventilar, medir la atmósfera (oxígeno normal: <mark>21 %</mark>), permiso de entrada y vigilante fuera. Nunca entres a rescatar sin equipo de respiración autónomo.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-helmet"/></svg><div><b>Equipo de protección</b><p>Casco, botas, guantes y gafas según el trabajo. En altura o fuera de la borda, arnés amarrado y permiso.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-door"/></svg><div><b>Puertas estancas</b><p>Cerradas en navegación. En las de corredera, espera a que se abran del todo y no te quedes en el hueco.</p></div></div>
       </div>
@@ -710,7 +733,7 @@ footer ul{margin:0;padding-left:18px}
           <tr><td><b>II</b></td><td>Sustancias nocivas líquidas a granel</td></tr>
           <tr><td><b>III</b></td><td>Sustancias perjudiciales en bultos</td></tr>
           <tr><td><b>IV</b></td><td>Aguas sucias</td></tr>
-          <tr><td><b>V</b></td><td>Basuras. Plásticos al mar: prohibido siempre</td></tr>
+          <tr><td><b>V</b></td><td>Basuras. Plásticos al mar: <mark>prohibido siempre</mark></td></tr>
           <tr><td><b>VI</b></td><td>Contaminación atmosférica</td></tr>
         </tbody>
       </table></div>
@@ -722,6 +745,7 @@ footer ul{margin:0;padding-left:18px}
 
     <div class="sub" id="m4-stcw">
       <h3>Descanso y alcohol</h3>
+      <p class="hand">10 de cada 24 y 77 a la semana</p>
       <div class="facts">
         <div class="fact"><svg class="ico"><use href="#i-moon"/></svg><div><b>Descanso mínimo (STCW)</b><p>10 h en cada periodo de 24 h y 77 h en 7 días. Como mucho en dos periodos, uno de al menos 6 h.</p></div></div>
         <div class="fact"><svg class="ico"><use href="#i-glass"/></svg><div><b>Alcohol</b><p>Límite STCW: 0,05 % en sangre o 0,25 mg/l en aire espirado. Cada país puede ser más estricto.</p></div></div>
@@ -732,17 +756,12 @@ footer ul{margin:0;padding-left:18px}
 
   <!-- CAFÉ -->
   <section id="cafe" class="stack">
-    <div class="sec-head">
-      <span class="tag">Apoya esta web</span>
-      <h2>Invítame a un café</h2>
-    </div>
-    <div class="cafe-box">
-      <svg class="ico" viewBox="0 0 48 48" style="stroke-width:2"><use href="#i-cup"/></svg>
-      <div>
-        <div class="price">1 €</div>
-        <p>Esta web es gratis para toda la clase. Si te ha ayudado a estudiar, puedes invitarme a un café.</p>
-        <div id="cafe-action"></div>
-      </div>
+    <div class="postit">
+      <svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-cup"/></svg>
+      <p class="hand">¿Te ha servido?</p>
+      <p>Esta web es gratis para toda la clase. Si te ha ayudado a estudiar, me puedes invitar a un café.</p>
+      <span class="price">1 €</span>
+      <div id="cafe-action"></div>
     </div>
   </section>
 
@@ -753,6 +772,7 @@ footer ul{margin:0;padding-left:18px}
 
 <footer class="gut">
   <div class="col">
+    <p class="sign-off">Hecho a base de apuntes y café. ¡Mucha suerte en el examen!</p>
     <p><b>Material de estudio, no oficial.</b> Resume las normas que fijan el curso. Si algo no coincide con el manual de tu centro, en su examen vale lo que diga su manual.</p>
     <p>Basado en:</p>
     <ul>
@@ -998,9 +1018,9 @@ function result(){
 (function(){
   const box=document.getElementById("cafe-action");
   if(DONATION_URL){
-    box.innerHTML=`<a class="btn primary" href="${esc(DONATION_URL)}" target="_blank" rel="noopener">Invitar a un café · 1 €</a><p class="note">Se abre la página de pago en una pestaña nueva.</p>`;
+    box.innerHTML=`<a class="btn primary" href="${esc(DONATION_URL)}" target="_blank" rel="noopener">Invitar a un café · 1 €</a><p class="note">Se abre en una pestaña nueva. ¡Gracias!</p>`;
   }else{
-    box.innerHTML=`<button class="btn primary" disabled>Invitar a un café · 1 €</button><p class="note">El enlace para invitar estará disponible muy pronto.</p>`;
+    box.innerHTML=`<button class="btn primary" disabled>Invitar a un café · 1 €</button><p class="note">El enlace estará listo muy pronto.</p>`;
   }
 })();
 
