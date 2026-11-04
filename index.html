@@ -16,16 +16,19 @@
   --bg:#F1F5F9; --surface:#FFFFFF; --soft:#E6EDF4; --ink:#0E2236; --muted:#566779; --line:#D4DDE7;
   --solas:#E5550A; --solas-ink:#FFFFFF; --solas-soft:#FDE8DC;
   --ok:#1B7A4C; --ok-bg:#E3F3EA; --bad:#B3261E; --bad-bg:#FBE7E5;
+  --sea1:#2F6FA6; --sea2:#7FA9CF; --sea3:#C9DCEC; --hull:#17324D; --deck:#FFFFFF;
   --sg:#00843D; --sr:#C8102E; --sb:#005EB8; --sy:#F6C800; --sk:#111111; --sw:#FFFFFF;
   --display:"Barlow Condensed","Arial Narrow",sans-serif;
   --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sea1:#2E6AA0; --sea2:#1F4A70; --sea3:#14304A; --hull:#5A7A9C; --deck:#DCE6F0;
   --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
   --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
   --ok:#5CCB94; --ok-bg:#12301F; --bad:#F27D74; --bad-bg:#3A1714; color-scheme:dark}}
 :root[data-theme="dark"]{
+  --sea1:#2E6AA0; --sea2:#1F4A70; --sea3:#14304A; --hull:#5A7A9C; --deck:#DCE6F0;
   --bg:#0A1520; --surface:#12202E; --soft:#182A3B; --ink:#E4ECF3; --muted:#93A5B7; --line:#24384C;
   --solas:#FF7A33; --solas-ink:#1A0B02; --solas-soft:#3A2010;
   --ok:#5CCB94; --ok-bg:#12301F; --bad:#F27D74; --bad-bg:#3A1714; color-scheme:dark}
@@ -155,6 +158,38 @@ td b{font-weight:600}
 .scale b{font-family:var(--mono);font-size:13px}
 .scale .s0{background:var(--ok-bg)} .scale .s1{background:var(--solas-soft)} .scale .s2{background:var(--bad-bg)} .scale .s3{background:var(--bad);color:var(--surface)}
 
+
+/* escena del barco */
+.hero-wrap{display:grid;gap:4px;align-items:end;scroll-margin-top:72px}
+@media (min-width:720px){.hero-wrap{grid-template-columns:1.1fr .9fr;gap:16px}}
+.scene{margin:0;min-width:0}
+.scene svg{display:block;width:100%;height:auto;overflow:hidden}
+.scene .sun{fill:var(--solas-soft)}
+.scene .w3 path{fill:var(--sea3)} .scene .w2 path{fill:var(--sea2)} .scene .w1 path{fill:var(--sea1)}
+.scene .hull{fill:var(--hull)} .scene .deck{fill:var(--deck)} .scene .acc{fill:var(--solas)}
+.scene .ln{fill:none;stroke:var(--hull);stroke-linecap:round;stroke-linejoin:round}
+.scene .acc-ln{stroke:var(--solas)}
+.scene .gulls path{fill:none;stroke:var(--muted);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.scene .smoke circle{fill:var(--line);opacity:.7;transform-box:fill-box;transform-origin:center}
+.scene .ring{stroke:var(--solas);stroke-width:5}
+.scene .ring-w{stroke:var(--deck);stroke-width:5;stroke-dasharray:4 10.14}
+.scene .boat{transform-origin:210px 172px}
+@media (prefers-reduced-motion: no-preference){
+  .scene .w3{animation:slide 16s linear infinite}
+  .scene .w2{animation:slide 10s linear infinite reverse}
+  .scene .w1{animation:slide 6s linear infinite}
+  .scene .boat{animation:bob 5s ease-in-out infinite}
+  .scene .buoy{animation:float 3.4s ease-in-out infinite}
+  .scene .gulls{animation:drift 14s ease-in-out infinite alternate}
+  .scene .smoke circle{animation:puff 4.5s ease-out infinite}
+  .scene .smoke circle:nth-child(2){animation-delay:1.5s}
+  .scene .smoke circle:nth-child(3){animation-delay:3s}
+}
+@keyframes slide{to{transform:translateX(-100px)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(3px) rotate(1.5deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+@keyframes drift{to{transform:translate(46px,-6px)}}
+@keyframes puff{0%{transform:translate(0,0) scale(.6);opacity:.75}100%{transform:translate(-28px,-34px) scale(2);opacity:0}}
 .go{align-self:flex-start}
 main > *,.stack > *,.mod > *,.sub > *,.duo > *,.hero > *{min-width:0}
 .figure svg{width:100%}
@@ -274,7 +309,8 @@ footer ul{margin:0;padding-left:18px}
 <main id="main" class="gut">
 <div class="col stack" style="gap:56px">
 
-  <section id="inicio" class="hero">
+  <section id="inicio" class="hero-wrap">
+    <div class="hero">
     <span class="tag">STCW · Regla VI/1 · Sección A-VI/1</span>
     <h1>Formación Básica en Seguridad</h1>
     <div class="stripe"></div>
@@ -284,6 +320,35 @@ footer ul{margin:0;padding-left:18px}
       <a class="btn primary" href="#tests">Hacer un test</a>
       <a class="btn" href="#teoria">Repasar la teoría</a>
     </div>
+    </div>
+    <figure class="scene" aria-hidden="true">
+      <svg viewBox="0 0 400 230">
+        <circle class="sun" cx="322" cy="58" r="30"/>
+        <g transform="translate(60 46)"><g class="gulls"><path d="M0 0q5-5 10 0q5-5 10 0"/><path d="M30 14q4-4 8 0q4-4 8 0"/></g></g>
+        <g class="wave w3"><path d="M0 166 q25 -7 50 0 t50 0 q25 -7 50 0 t50 0 q25 -7 50 0 t50 0 q25 -7 50 0 t50 0 q25 -7 50 0 t50 0 q25 -7 50 0 t50 0 V230 H0 Z"/></g>
+        <g class="boat">
+          <g class="smoke"><circle cx="108" cy="110" r="5"/><circle cx="108" cy="110" r="5"/><circle cx="108" cy="110" r="5"/></g>
+          <path class="hull" d="M92 146 L322 140 L302 178 L112 178 Z"/>
+          <path d="M97 153 L317 147" class="ln acc-ln" stroke-width="4"/>
+          <g class="deck"><circle cx="140" cy="164" r="2.6"/><circle cx="165" cy="164" r="2.6"/><circle cx="190" cy="163" r="2.6"/><circle cx="215" cy="163" r="2.6"/><circle cx="240" cy="162" r="2.6"/><circle cx="265" cy="162" r="2.6"/></g>
+          <path class="hull" d="M100 145 L103 117 H116 L117 145 Z"/>
+          <path class="acc" d="M102.4 123 H115.5 V128 H102 Z"/>
+          <path class="deck" d="M118 145 V112 H214 V143 Z"/>
+          <path class="deck" d="M134 112 V90 H200 V112 Z"/>
+          <rect class="hull" x="140" y="95" width="54" height="7" rx="1.5"/>
+          <path class="ln" d="M129 90 H205" stroke-width="3"/>
+          <g class="hull" opacity=".55"><rect x="124" y="121" width="8" height="6"/><rect x="138" y="121" width="8" height="6"/><rect x="152" y="121" width="8" height="6"/><rect x="166" y="121" width="8" height="6"/><rect x="180" y="121" width="8" height="6"/><rect x="194" y="121" width="8" height="6"/></g>
+          <path class="ln" d="M168 90 V64 M158 72 H178" stroke-width="2.6"/>
+          <circle class="acc" cx="168" cy="62" r="2.6"/>
+          <path class="ln" d="M223 130 V119 H228 M251 130 V119 H246" stroke-width="2"/>
+          <path class="acc" d="M219 128 H255 Q253 138 244 138 H230 Q221 138 219 128 Z"/>
+          <path class="ln" d="M287 141 V106 M287 111 L263 135" stroke-width="2.6"/>
+        </g>
+        <g class="wave w2"><path d="M0 181 q25 -6 50 0 t50 0 q25 -6 50 0 t50 0 q25 -6 50 0 t50 0 q25 -6 50 0 t50 0 q25 -6 50 0 t50 0 q25 -6 50 0 t50 0 V230 H0 Z"/></g>
+        <g transform="translate(64 190)"><g class="buoy"><circle r="9" fill="none" class="ring"/><circle r="9" fill="none" class="ring-w"/></g></g>
+        <g class="wave w1"><path d="M0 198 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 q12.5 -5 25 0 t25 0 V230 H0 Z"/></g>
+      </svg>
+    </figure>
   </section>
 
   <!-- TESTS -->
