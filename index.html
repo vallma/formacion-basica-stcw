@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Apuntes y tests para preparar el examen de Formación Básica en Seguridad (STCW).">
+<meta name="description" content="Apuntes, tests y pictogramas para preparar el examen de Formación Básica en Seguridad (STCW).">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Test de Formación Básica STCW</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -57,7 +57,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 .nav a:hover{background:var(--soft)}
 .nav a.cafe{color:var(--solas);display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;padding-block:4px}
 .nav a.cafe small{font-family:var(--hand);font-weight:600;font-size:16px;color:var(--muted);max-width:160px;text-align:right}
-@media (max-width:480px){.nav a.cafe small{font-size:14px;max-width:136px}}
+@media (max-width:480px){.nav a.cafe small{font-size:13px;max-width:150px}.brand .short{display:none!important}.brand{gap:0}}
+.nav .short{display:none}
+@media (max-width:480px){.nav .long{display:none}.nav .short{display:inline}.nav a{padding:6px 6px}}
 
 main{display:flex;flex-direction:column;gap:56px;padding-block:28px 64px}
 section{scroll-margin-top:72px}
@@ -215,6 +217,19 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%,var(--mark) 90%,
 .postit .btn:disabled{opacity:.6}
 .postit svg{position:absolute;right:16px;top:18px;width:54px;height:54px;color:#B8430A;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .sign-off{font-family:var(--hand);font-size:24px;color:var(--ink)}
+
+/* pictogramas */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
+.chip i{width:12px;height:12px;border-radius:3px;display:block}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pcard svg{width:72px;height:72px;flex:none}
+.pcard b{font-weight:600;line-height:1.25}
+.pcard p{font-size:14px;color:var(--muted)}
+.qimg{display:flex;justify-content:center;padding:6px 0}
+.qimg svg{width:132px;height:132px}
 .go{align-self:flex-start}
 main > *,.stack > *,.mod > *,.sub > *,.duo > *,.hero > *{min-width:0}
 .figure svg{width:100%}
@@ -326,6 +341,7 @@ footer ul{margin:0;padding-left:18px}
     <nav class="nav" aria-label="Secciones">
       <a href="#tests">Tests</a>
       <a href="#teoria">Teoría</a>
+      <a href="#pictogramas"><span class="long">Pictogramas</span><span class="short">Señales</span></a>
       <a href="#cafe" class="cafe"><span>Café</span><small>la ciencia dice que ayuda a aprobar*</small></a>
     </nav>
   </div>
@@ -756,6 +772,18 @@ footer ul{margin:0;padding-left:18px}
     <button class="btn go" data-start="m4">Hacer el test del módulo 4</button>
   </section>
 
+  <section id="pictogramas" class="stack">
+    <div class="sec-head">
+      <h2>Pictogramas</h2>
+      <p class="lead">Las señales que hay por el barco y que te pueden pedir que reconozcas. Fíjate primero en la forma y el color: ya te dicen de qué tipo es.</p>
+      <p class="hand">cuadrado verde = salvamento · cuadrado rojo = incendios · círculo azul = obligación · triángulo amarillo = peligro · círculo con barra roja = prohibido</p>
+    </div>
+    <div class="chips" id="pchips" role="group" aria-label="Filtrar por tipo"></div>
+    <div class="pgrid" id="pgrid"></div>
+    <p class="cap" style="text-align:left">Dibujos simplificados de las señales OMI de salvamento y de la norma ISO 7010. En el barco o en el examen pueden verse algo distintos, pero la forma y el color son los mismos.</p>
+    <button class="btn primary go" data-start="picto">Hacer el test de pictogramas</button>
+  </section>
+
   <!-- CAFÉ -->
   <section id="cafe" class="stack">
     <div class="postit">
@@ -795,7 +823,8 @@ const MODS = {
   1:{code:"A-VI/1-1", short:"Supervivencia", name:"Técnicas de supervivencia personal"},
   2:{code:"A-VI/1-2", short:"Incendios", name:"Prevención y lucha contra incendios"},
   3:{code:"A-VI/1-3", short:"Primeros auxilios", name:"Primeros auxilios básicos"},
-  4:{code:"A-VI/1-4", short:"Seguridad personal", name:"Seguridad personal y responsabilidades sociales"}
+  4:{code:"A-VI/1-4", short:"Seguridad personal", name:"Seguridad personal y responsabilidades sociales"},
+  5:{code:"Señales", short:"Pictogramas", name:"Pictogramas y señales de seguridad"}
 };
 // En cada pregunta la opción correcta es la primera; el orden se baraja al mostrarla.
 const RAW = {
@@ -891,6 +920,7 @@ const RAW = {
 const Q=[];
 [1,2,3,4].forEach(m=>RAW[m].forEach((r,i)=>Q.push({id:m+"-"+(i+1),m,q:r[0],o:r[1],e:r[2]})));
 const byMod=m=>Q.filter(x=>x.m===m);
+const ALLQ=()=>Q.concat(typeof PQ!=="undefined"?PQ:[]);
 
 // azar reproducible: todos los compañeros ven el mismo simulacro
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -911,9 +941,10 @@ function card(cls,k,t,d,attr){return `<button class="tcard ${cls}" ${attr}><span
 function buildCards(){
   document.getElementById("g-sim").innerHTML=[0,1,2,3].map(k=>card("exam","Examen · 20 preguntas","Simulacro "+(k+1),"5 de cada módulo. Nota al final.",`data-start="s${k}"`)).join("");
   document.getElementById("g-mod").innerHTML=[1,2,3,4].map(m=>card("","Módulo "+m+" · 20 preguntas",MODS[m].short,MODS[m].name,`data-start="m${m}"`)).join("");
-  const miss=loadMiss().filter(id=>Q.some(x=>x.id===id));
+  const miss=loadMiss().filter(id=>ALLQ().some(x=>x.id===id));
   document.getElementById("g-more").innerHTML=
     card("","Estudio · 20 preguntas","Aleatorio","Mezcla nueva de todos los módulos cada vez.",`data-start="rnd"`)+
+    card("","Estudio · "+PICTOS.length+" señales","Pictogramas","¿Qué significa cada señal de seguridad?",`data-start="picto"`)+
     card("","Estudio · "+(miss.length||"sin")+" fallos","Repasar fallos",miss.length?"Las que fallaste. Al acertarlas, salen de la lista.":"Aún no tienes fallos guardados en este móvil.",`data-start="miss" ${miss.length?"":"disabled style=\"opacity:.55;cursor:default\""}`);
 }
 
@@ -921,7 +952,8 @@ function startById(id){
   if(id[0]==="s"){const k=+id.slice(1);start(SIMS[k],"Simulacro "+(k+1),"exam",rng(5000+k));return}
   if(id[0]==="m"){const m=+id.slice(1);start(shuffle(byMod(m)),"Módulo "+m+" · "+MODS[m].short,"study");return}
   if(id==="rnd"){start(shuffle(Q).slice(0,20),"Aleatorio","study");return}
-  if(id==="miss"){const miss=loadMiss();const l=Q.filter(x=>miss.includes(x.id));if(l.length)start(shuffle(l),"Repaso de fallos","study")}
+  if(id==="picto"){start(shuffle(PQ),"Pictogramas","study");return}
+  if(id==="miss"){const miss=loadMiss();const l=ALLQ().filter(x=>miss.includes(x.id));if(l.length)start(shuffle(l),"Repaso de fallos","study")}
 }
 document.addEventListener("click",e=>{
   const b=e.target.closest("[data-start]");
@@ -947,6 +979,7 @@ function render(){
   <div class="meta"><span>${esc(S.label)}${exam?" · modo examen":""}</span><button class="exit" id="exit">Salir</button></div>
   <div class="bar"><i style="width:${(S.i/n)*100}%"></i></div>
   <div class="meta"><span class="tag" style="font-size:12px">${MODS[it.m].code} · ${MODS[it.m].short}</span><span>${S.i+1} / ${n}</span></div>
+  ${it.img?`<div class="qimg">${it.img}</div>`:""}
   <p class="q">${esc(it.q)}</p>
   <div class="opts">${it.order.map((oi,k)=>`<button class="opt" id="o${k}" data-oi="${oi}"><span class="k">${"ABCD"[k]}</span><span>${esc(it.o[oi])}</span></button>`).join("")}</div>
   <div id="after" class="stack"></div>`;
@@ -993,7 +1026,7 @@ function result(){
   const pct=Math.round(right/n*100);
   const msg=pct>=90?"Muy bien preparado.":pct>=70?"Vas bien. Repasa los fallos de abajo.":"Toca repasar la teoría de los módulos donde más fallas.";
   const mods=Object.keys(per);
-  const list=S.list.map(x=>Q.find(q=>q.id===x.id)),label=S.label,mode=S.mode;
+  const list=S.list.map(x=>ALLQ().find(q=>q.id===x.id)),label=S.label,mode=S.mode;
   qcol.innerHTML=`
   <div class="meta"><span>${esc(label)} · resultado</span><button class="exit" id="exit">Salir</button></div>
   <div class="score">${right}<small> / ${n}</small></div>
@@ -1015,6 +1048,84 @@ function result(){
   qcol.querySelector("#again").onclick=()=>{const k=label.match(/^Simulacro (\d)/);if(k)startById("s"+(k[1]-1));else start(shuffle(list),label,mode)};
   window.scrollTo({top:0,behavior:"auto"});
 }
+
+
+// ===== Pictogramas =====
+const WAVES='<path d="M6 57q4-3 8 0t8 0t8 0t8 0t8 0t8 0t8 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>';
+const st=(d,w=4)=>`<path d="${d}" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+const fl=(d,c="currentColor")=>`<path d="${d}" fill="${c}"/>`;
+const PCATS={
+  salv:{name:"Salvamento",sw:"var(--sg)"},
+  inc:{name:"Incendios",sw:"var(--sr)"},
+  obl:{name:"Obligación",sw:"var(--sb)"},
+  adv:{name:"Peligro",sw:"var(--sy)"},
+  proh:{name:"Prohibición",sw:"var(--sr)"},
+  aux:{name:"Primeros auxilios",sw:"var(--sg)"}
+};
+const PICTOS=[
+ ["salv","Bote salvavidas","Lugar donde está el bote salvavidas.",fl("M8 42h48l-6 9H14z")+fl("M15 42c2-10 9-14 17-14s15 4 17 14z")+'<g fill="var(--sg)"><rect x="21" y="34" width="5" height="4" rx="1"/><rect x="29.5" y="33" width="5" height="4" rx="1"/><rect x="38" y="34" width="5" height="4" rx="1"/></g>'+WAVES],
+ ["salv","Balsa salvavidas","Lugar donde está la balsa salvavidas.",fl("M9 46h46l-3 5H12z")+fl("M13 46c2-14 9-20 19-20s17 6 19 20z")+fl("M26 46c0-6 3-9 6-9s6 3 6 9z","var(--sg)")+st("M32 26v-6",3)+WAVES],
+ ["salv","Balsa de pescante","Balsa que se arría con un pescante, ya inflada y con gente dentro.",st("M12 56V10h26v8")+st("M38 18v13",2.5)+fl("M24 46h28l-2 4H26z")+fl("M26 46c1-9 6-15 12-15s11 6 12 15z")+fl("M34 46c0-4 2-6 4-6s4 2 4 6z","var(--sg)")],
+ ["salv","Bote de rescate","Lugar donde está el bote de rescate.",fl("M8 42h48l-7 9H15z")+'<circle cx="25" cy="25" r="4" fill="currentColor"/><circle cx="39" cy="25" r="4" fill="currentColor"/>'+st("M25 30v12M39 30v12M19 35h12M33 35h12",3.5)+WAVES],
+ ["salv","Aro salvavidas","Lugar donde hay un aro salvavidas.",'<circle cx="32" cy="32" r="16" fill="none" stroke="currentColor" stroke-width="9"/><circle cx="32" cy="32" r="16" fill="none" stroke="var(--sg)" stroke-width="10" stroke-dasharray="5 20.13" transform="rotate(42 32 32)"/>'],
+ ["salv","Aro salvavidas con luz","Aro con luz de encendido automático.",'<circle cx="26" cy="38" r="13" fill="none" stroke="currentColor" stroke-width="7"/>'+'<rect x="43" y="14" width="9" height="12" rx="2" fill="currentColor"/>'+st("M47.5 9v-3M54 11l3-3M41 11l-3-3",2.5)+st("M47.5 26c0 6-4 8-10 8",2.5)],
+ ["salv","Chaleco salvavidas","Lugar donde están los chalecos salvavidas.",fl("M22 9h7l3 7 3-7h7l9 11v35H38V30l-6-5-6 5v25H13V20z")],
+ ["salv","Traje de inmersión","Lugar donde están los trajes de inmersión.",'<circle cx="32" cy="12" r="6" fill="currentColor"/>'+fl("M22 20h20l6 18h-5l-4-10v27h-5V39h-4v16h-5V28l-4 10h-5z")],
+ ["salv","Ayuda térmica","Lugar donde están las ayudas térmicas.",'<circle cx="32" cy="13" r="6" fill="currentColor"/>'+fl("M22 22h20l5 34H17z")+st("M26 30h12M25 38h14M24 46h16",2).replace('currentColor','var(--sg)')],
+ ["salv","Radiobaliza (RLS / EPIRB)","Radiobaliza de localización de siniestros, 406 MHz.",'<rect x="25" y="24" width="14" height="32" rx="4" fill="currentColor"/>'+st("M32 24V10",3)+st("M40 12a9 9 0 0 1 0 11M45 8a15 15 0 0 1 0 19M24 12a9 9 0 0 0 0 11M19 8a15 15 0 0 0 0 19",3)],
+ ["salv","Respondedor de radar (SART)","Aparece en el radar como una línea de 12 puntos.",'<rect x="10" y="28" width="12" height="26" rx="3" fill="currentColor"/>'+st("M16 28V14",3)+'<g fill="currentColor">'+Array.from({length:12},(_,i)=>`<circle cx="${27+i*2.6}" cy="40" r="1.3"/>`).join("")+'</g>'],
+ ["salv","Radioteléfono VHF bidireccional","Radio portátil para la embarcación de supervivencia.",'<rect x="16" y="22" width="16" height="32" rx="3" fill="currentColor"/>'+st("M20 22V9",3)+'<rect x="19" y="27" width="10" height="7" fill="var(--sg)"/>'+st("M38 30h16M50 26l4 4-4 4M38 44h16M42 40l-4 4 4 4",3)],
+ ["salv","Cohetes con paracaídas","Señales de socorro: cohete de luz roja con paracaídas.",fl("M16 22a16 12 0 0 1 32 0z")+st("M16 22l16 18 16-18M24 22l8 18 8-18",2)+'<circle cx="32" cy="44" r="5" fill="currentColor"/>'+st("M32 51v6M26 49l-3 4M38 49l3 4",2.5)],
+ ["salv","Aparato lanzacabos","Lanza un cabo a otro buque o a la costa.",st("M12 50l18-18",9)+st("M33 29c6-10 16-14 22-10",3).replace('stroke-linecap','stroke-dasharray="4 3" stroke-linecap')+st("M8 55h20",4)],
+ ["salv","Escala de embarco","Escala para bajar a la embarcación de supervivencia.",st("M8 10h48",4)+st("M24 10v46M40 10v46",3.5)+st("M24 18h16M24 26h16M24 34h16M24 42h16M24 50h16",3.5)],
+ ["salv","Puesto de reunión","Donde vas al oír la alarma general.",'<g fill="currentColor"><circle cx="22" cy="25" r="3.5"/><circle cx="32" cy="25" r="3.5"/><circle cx="42" cy="25" r="3.5"/></g>'+fl("M18 42v-8a4 4 0 0 1 8 0v8zM28 42v-8a4 4 0 0 1 8 0v8zM38 42v-8a4 4 0 0 1 8 0v8z")+st("M7 7l8 8M15 15h-6M15 15v-6M57 7l-8 8M49 15h6M49 15v-6M7 57l8-8M15 49h-6M15 49v6M57 57l-8-8M49 49h6M49 49v6",3)],
+ ["salv","Salida de emergencia","Vía de evacuación hacia la salida.",'<rect x="40" y="10" width="15" height="44" fill="none" stroke="currentColor" stroke-width="3.5"/><circle cx="25" cy="15" r="4.5" fill="currentColor"/>'+st("M23 22l-4 13M23 24l9 4M22 25l-8-3M19 35l8 8-2 10M19 35l-6 10H7",4.5)],
+ ["inc","Extintor","Lugar donde hay un extintor.",fl("M25 27h14v24a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z")+st("M28 27v-7h9v7M37 16h9M32 20v-5",3.5)+st("M28 22c-7 0-11 5-11 12v6",3.5)],
+ ["inc","Manguera contra incendios","Boca de incendio con manguera.",'<circle cx="28" cy="30" r="15" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="28" cy="30" r="8" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="28" cy="30" r="2.5" fill="currentColor"/>'+st("M43 30v14c0 6 4 8 9 8",4)+fl("M50 48l7 4-7 4z")],
+ ["inc","Pulsador de alarma","Pulsador manual de alarma de incendios.",'<rect x="12" y="16" width="26" height="26" rx="3" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="25" cy="29" r="6" fill="currentColor"/>'+st("M44 20a14 14 0 0 1 0 18M50 14a22 22 0 0 1 0 30",3.5)],
+ ["inc","Teléfono de emergencia","Teléfono para avisar de un incendio.",fl("M20 12h9l3 10-6 4a26 26 0 0 0 12 12l4-6 10 3v9a3 3 0 0 1-3 3C29 47 17 35 17 15a3 3 0 0 1 3-3z")],
+ ["obl","Chaleco salvavidas obligatorio","Hay que llevar puesto el chaleco.",fl("M26 15h5l1 5 1-5h5l7 8v25h-9V32l-4-3-4 3v16h-9V23z")],
+ ["obl","Casco obligatorio","Hay que llevar casco.",st("M15 42h34",5)+fl("M20 42c0-12 5-19 12-19s12 7 12 19z")],
+ ["obl","Protección auditiva obligatoria","Hay que llevar cascos u orejeras.",st("M21 36v-6a11 11 0 0 1 22 0v6",4)+'<rect x="15" y="32" width="10" height="15" rx="4" fill="currentColor"/><rect x="39" y="32" width="10" height="15" rx="4" fill="currentColor"/>'],
+ ["obl","Gafas obligatorias","Hay que llevar protección para los ojos.",fl("M13 28h38v8a6 6 0 0 1-6 6h-6l-3-4h-8l-3 4h-6a6 6 0 0 1-6-6z")+'<rect x="17" y="31" width="11" height="6" rx="2" fill="var(--sb)"/><rect x="36" y="31" width="11" height="6" rx="2" fill="var(--sb)"/>'],
+ ["obl","Arnés obligatorio","Hay que usar arnés de seguridad.",st("M32 8v12",3)+'<circle cx="32" cy="24" r="4" fill="currentColor"/>'+fl("M25 31h14v13h-4v12h-6V44h-4z")+st("M25 33l14 9M39 33l-14 9",2).replace('currentColor','var(--sb)')],
+ ["adv","Riesgo eléctrico","Peligro de electrocución.",fl("M35 22l-10 15h7l-3 14 10-17h-7z")],
+ ["adv","Materias inflamables","Peligro de incendio.",fl("M32 51c-6 0-9-4-9-9 0-6 5-8 6-14 3 2 4 5 4 7 1-1 2-3 2-5 4 3 6 7 6 12 0 5-3 9-9 9z")],
+ ["adv","Materias tóxicas","Peligro de intoxicación.",'<circle cx="32" cy="32" r="7" fill="currentColor"/><rect x="28" y="36" width="8" height="5" fill="currentColor"/><circle cx="29.5" cy="32" r="1.8" fill="var(--sy)"/><circle cx="34.5" cy="32" r="1.8" fill="var(--sy)"/>'+st("M23 44l18 6M41 44l-18 6",2.5)],
+ ["adv","Atmósfera explosiva","Zona con riesgo de explosión.",'<text x="32" y="48" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="15" fill="currentColor">EX</text>'],
+ ["adv","Peligro general","Atención: hay un peligro.",st("M32 24v15",6)+'<circle cx="32" cy="47" r="3.5" fill="currentColor"/>'],
+ ["proh","Prohibido fumar","No se puede fumar.",'<rect x="14" y="30" width="28" height="7" fill="currentColor"/><rect x="43" y="30" width="6" height="7" fill="currentColor"/>'+st("M46 27c0-4 3-4 3-8",2)],
+ ["proh","Prohibido encender fuego","Prohibidas las llamas y las chispas.",st("M22 46l14-14",4)+fl("M38 30c-4 0-6-3-6-6 0-4 3-5 4-9 2 2 3 4 3 5 1 0 2-2 2-3 2 2 3 5 3 7 0 4-2 6-6 6z")],
+ ["proh","No apagar con agua","No usar agua para extinguir aquí.",fl("M32 50c-5 0-8-3-8-8 0-5 4-7 5-12 3 2 4 4 4 6 1-1 2-2 2-4 3 3 5 6 5 10 0 5-3 8-8 8z")+'<g fill="currentColor"><path d="M24 14c2 3 3 5 3 6a3 3 0 0 1-6 0c0-1 1-3 3-6z"/><path d="M33 10c2 3 3 5 3 6a3 3 0 0 1-6 0c0-1 1-3 3-6z"/><path d="M42 14c2 3 3 5 3 6a3 3 0 0 1-6 0c0-1 1-3 3-6z"/></g>'],
+ ["proh","Prohibido el paso","Solo personal autorizado.",'<circle cx="32" cy="16" r="4.5" fill="currentColor"/>'+st("M32 23v14M32 26l-7 7M32 26l7 7M32 37l-6 12M32 37l6 12",4.5)],
+ ["aux","Primeros auxilios","Botiquín o puesto de primeros auxilios.",fl("M26 12h12v14h14v12H38v14H26V38H12V26h14z")],
+ ["aux","Lavaojos","Fuente para lavar los ojos.",fl("M12 40s8-11 20-11 20 11 20 11-8 11-20 11-20-11-20-11z")+'<circle cx="32" cy="40" r="5" fill="var(--sg)"/>'+st("M24 13v7M32 10v10M40 13v7",3)],
+ ["aux","Ducha de emergencia","Ducha para quitar productos químicos del cuerpo.",st("M14 8h14v6",3.5)+fl("M20 14h16l-3 5H23z")+st("M22 24v4M28 24v5M34 24v4",2.5)+'<circle cx="28" cy="35" r="4" fill="currentColor"/>'+st("M28 41v9M22 45h12M28 50l-4 7M28 50l4 7",3.5)],
+ ["aux","Desfibrilador (DEA)","Lugar donde está el desfibrilador.",fl("M32 52S13 40 13 26a9.5 9.5 0 0 1 19-4 9.5 9.5 0 0 1 19 4c0 14-19 26-19 26z")+fl("M35 22l-8 12h6l-3 11 9-14h-6z","var(--sg)")]
+];
+function pictoSVG(cat,glyph){
+  let frame,col="#FFFFFF",after="";
+  if(cat==="salv"||cat==="aux")frame='<rect width="64" height="64" rx="5" fill="var(--sg)"/>';
+  else if(cat==="inc")frame='<rect width="64" height="64" rx="5" fill="var(--sr)"/>';
+  else if(cat==="obl")frame='<circle cx="32" cy="32" r="31" fill="var(--sb)"/>';
+  else if(cat==="adv"){frame='<path d="M32 4l29 52H3z" fill="var(--sy)" stroke="var(--sk)" stroke-width="4" stroke-linejoin="round"/>';col="var(--sk)";glyph=`<g transform="translate(0 -1)">${glyph}</g>`}
+  else {frame='<circle cx="32" cy="32" r="30" fill="#FFFFFF"/>';col="var(--sk)";after='<circle cx="32" cy="32" r="26" fill="none" stroke="var(--sr)" stroke-width="7"/><path d="M14 14l36 36" stroke="var(--sr)" stroke-width="7"/>'}
+  return `<svg viewBox="0 0 64 64" role="img" aria-label="Pictograma">${frame}<g style="color:${col}">${glyph}</g>${after}</svg>`;
+}
+const PQ=PICTOS.map((p,i)=>{
+  const same=shuffle(PICTOS.filter(x=>x!==p&&x[0]===p[0]).map(x=>x[1]));
+  const others=shuffle(PICTOS.filter(x=>x[0]!==p[0]).map(x=>x[1]));
+  const d=same.concat(others).slice(0,3);
+  return {id:"p-"+(i+1),m:5,q:"¿Qué significa esta señal?",img:pictoSVG(p[0],p[3]),o:[p[1],...d],e:p[1]+": "+p[2].charAt(0).toLowerCase()+p[2].slice(1)};
+});
+let pfilter="all";
+function renderPictos(){
+  const cats=[["all","Todas",""]].concat(Object.keys(PCATS).map(k=>[k,PCATS[k].name,PCATS[k].sw]));
+  document.getElementById("pchips").innerHTML=cats.map(([k,n,c])=>`<button class="chip" data-pf="${k}" aria-pressed="${pfilter===k}">${c?`<i style="background:${c}"></i>`:""}${n}</button>`).join("");
+  document.getElementById("pgrid").innerHTML=PICTOS.filter(p=>pfilter==="all"||p[0]===pfilter).map(p=>`<div class="pcard">${pictoSVG(p[0],p[3])}<b>${esc(p[1])}</b><p>${esc(p[2])}</p></div>`).join("");
+}
+document.addEventListener("click",e=>{const c=e.target.closest("[data-pf]");if(c){pfilter=c.dataset.pf;renderPictos()}});
+renderPictos();
 
 // café
 (function(){
