@@ -55,7 +55,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 @media (max-width:480px){.brand .long{display:none}.brand .short{display:inline}.nav a{padding:6px 8px}}
 .nav a{font-weight:600;font-size:15px;text-decoration:none;padding:6px 10px;border-radius:6px}
 .nav a:hover{background:var(--soft)}
-.nav a.cafe{color:var(--solas)}
+.nav a.cafe{color:var(--solas);display:flex;flex-direction:column;align-items:flex-end;line-height:1.1;padding-block:4px}
+.nav a.cafe small{font-family:var(--hand);font-weight:600;font-size:16px;color:var(--muted);max-width:160px;text-align:right}
+@media (max-width:480px){.nav a.cafe small{font-size:14px;max-width:136px}}
 
 main{display:flex;flex-direction:column;gap:56px;padding-block:28px 64px}
 section{scroll-margin-top:72px}
@@ -324,7 +326,7 @@ footer ul{margin:0;padding-left:18px}
     <nav class="nav" aria-label="Secciones">
       <a href="#tests">Tests</a>
       <a href="#teoria">Teoría</a>
-      <a href="#cafe" class="cafe">Café</a>
+      <a href="#cafe" class="cafe"><span>Café</span><small>la ciencia dice que ayuda a aprobar*</small></a>
     </nav>
   </div>
 </header>
@@ -1018,7 +1020,8 @@ function result(){
 (function(){
   const box=document.getElementById("cafe-action");
   if(DONATION_URL){
-    box.innerHTML=`<a class="btn primary" href="${esc(DONATION_URL)}" target="_blank" rel="noopener">Invitar a un café · 1 €</a><p class="note">Se abre en una pestaña nueva. ¡Gracias!</p>`;
+    box.innerHTML=`<a class="btn primary" href="${esc(DONATION_URL)}" target="_blank" rel="noopener">Invitar a un café · 1 €</a><p class="note">Se abre en una pestaña nueva. ¡Gracias!</p>
+        <p class="note">*Estudio científico con una muestra de una persona (yo, la noche antes del examen). Margen de error: enorme.</p>`;
   }else{
     box.innerHTML=`<button class="btn primary" disabled>Invitar a un café · 1 €</button><p class="note">El enlace estará listo muy pronto.</p>`;
   }
