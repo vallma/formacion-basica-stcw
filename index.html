@@ -239,6 +239,29 @@ mark{background:linear-gradient(transparent 52%,var(--mark) 52%,var(--mark) 90%,
 .combo svg{height:72px;width:auto;display:block;flex:none}
 .combo-card b{font-weight:600}
 .combo-card p{font-size:14px;color:var(--muted)}
+
+/* sugerencias */
+.sug-form{display:flex;flex-direction:column;gap:6px;max-width:620px}
+.sug-form label{font-weight:600;font-size:15px;margin-top:6px}
+.sug-form input,.sug-form textarea,.sug-admin input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;width:100%;box-sizing:border-box}
+.sug-form textarea{resize:vertical;min-height:96px}
+.sug-form input:focus,.sug-form textarea:focus,.sug-admin input:focus{outline:2px solid var(--solas);outline-offset:1px;border-color:var(--solas)}
+.hp{position:absolute!important;left:-9999px!important;width:1px!important;height:1px!important;opacity:0}
+.sug-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:8px}
+.sug-msg{font-size:14px;color:var(--muted)}
+.sug-msg.ok{color:var(--ok)} .sug-msg.bad{color:var(--bad)}
+.sug-lista{display:flex;flex-direction:column;gap:10px;max-width:720px}
+.sug{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--solas);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.sug .who{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sug .who b{font-weight:600}
+.sug time{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sug p{white-space:pre-wrap;overflow-wrap:anywhere}
+.sug .del{align-self:flex-start;background:none;border:1px solid var(--bad);color:var(--bad);border-radius:6px;padding:3px 10px;font-size:13px;font-weight:600;margin-top:4px}
+.sug .del.confirm{background:var(--bad);color:var(--surface)}
+.sug-admin{font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:8px;max-width:420px}
+.sug-admin .link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font-size:13px;align-self:flex-start}
+.sug-admin form{display:flex;gap:8px;flex-wrap:wrap}
+.sug-admin form input{flex:1 1 200px;width:auto}
 /* pictogramas */
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px}
@@ -382,6 +405,7 @@ footer ul{margin:0;padding-left:18px}
     <div class="row">
       <a class="btn primary" href="#tests">Hacer un test</a>
       <a class="btn" href="#teoria">Repasar la teoría</a>
+      <a class="btn" href="#sugerencias">Sugerir algo</a>
     </div>
     </div>
     <figure class="scene" aria-hidden="true">
@@ -829,6 +853,23 @@ footer ul{margin:0;padding-left:18px}
     <button class="btn primary go" data-start="picto">Hacer el test de señales</button>
   </section>
 
+  <section id="sugerencias" class="stack">
+    <div class="sec-head">
+      <h2>Sugerencias</h2>
+      <p class="lead">¿Falta algo, has visto un error o en clase han explicado algo que no está? Escríbelo aquí y lo añado. Lo que escribas lo verá todo el mundo.</p>
+    </div>
+    <form id="sug-form" class="sug-form" novalidate>
+      <label for="sug-nombre">Tu nombre</label>
+      <input id="sug-nombre" name="nombre" type="text" maxlength="60" autocomplete="given-name" required>
+      <label for="sug-texto">Qué falta o qué cambiarías</label>
+      <textarea id="sug-texto" name="comentario" rows="4" maxlength="1000" required placeholder="Por ejemplo: faltan las señales de la escala de práctico"></textarea>
+      <input id="sug-web" name="web" type="text" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+      <div class="sug-row"><button class="btn primary" type="submit" id="sug-enviar">Enviar sugerencia</button><span class="sug-msg" id="sug-msg" role="status"></span></div>
+    </form>
+    <div id="sug-lista" class="sug-lista"><p class="note">Cargando sugerencias…</p></div>
+    <div class="sug-admin" id="sug-admin"></div>
+  </section>
+
   <!-- CAFÉ -->
   <section id="cafe" class="stack">
     <div class="postit">
@@ -848,6 +889,7 @@ footer ul{margin:0;padding-left:18px}
 <footer class="gut">
   <div class="col">
     <p class="sign-off">Hecho a base de apuntes y café. ¡Mucha suerte en el examen!</p>
+    <p>¿Falta algo? <a href="#sugerencias">Déjame una sugerencia</a>.</p>
     <p><b>Material de estudio, no oficial.</b> Resume las normas que fijan el curso. Si algo no coincide con el manual de tu centro, en su examen vale lo que diga su manual.</p>
     <p>Basado en:</p>
     <ul>
@@ -862,6 +904,7 @@ footer ul{margin:0;padding-left:18px}
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ===== Enlace para donar. Pon aquí tu enlace (por ejemplo https://paypal.me/tuusuario/1EUR) ===== */
 const DONATION_URL = "https://paypal.me/vallma/1EUR";
@@ -1187,6 +1230,80 @@ function renderPictos(){
 }
 document.addEventListener("click",e=>{const c=e.target.closest("[data-pf]");if(c){pfilter=c.dataset.pf;renderPictos()}});
 renderPictos();
+
+
+// ===== Sugerencias (Supabase) =====
+(function(){
+  const URL_SB="https://rivbxuxqbinkpasmafvp.supabase.co";
+  const KEY_SB="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpdmJ4dXhxYmlua3Bhc21hZnZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM4ODA1OTAsImV4cCI6MjEwOTQ1NjU5MH0.WxYmE7uxq0AN1__Uuiprs28CVsPuBMjuPY5Jxbbvw-g";
+  const lista=document.getElementById("sug-lista"),form=document.getElementById("sug-form"),msg=document.getElementById("sug-msg"),admin=document.getElementById("sug-admin");
+  const PUBLIC_URL="https://formacion-basica-stcw.vercel.app/#sugerencias";
+  let sb=null,isAdmin=false,items=[];
+  const say=(t,c)=>{msg.textContent=t;msg.className="sug-msg"+(c?" "+c:"")};
+  const fecha=iso=>{try{return new Date(iso).toLocaleString("es-ES",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"})}catch(e){return iso}};
+  function offline(){
+    lista.innerHTML=`<p class="note">Las sugerencias funcionan en la web pública: <a href="${PUBLIC_URL}" target="_blank" rel="noopener">formacion-basica-stcw.vercel.app</a></p>`;
+    form.querySelector("#sug-enviar").disabled=true;
+  }
+  function pintar(){
+    if(!items.length){lista.innerHTML='<p class="note">Todavía no hay sugerencias. ¡Sé el primero!</p>';return}
+    lista.innerHTML=items.map(x=>`<article class="sug"><div class="who"><b>${esc(x.nombre)}</b><time datetime="${esc(x.created_at)}">${esc(fecha(x.created_at))}</time></div><p>${esc(x.comentario)}</p>${isAdmin?`<button class="del" data-del="${x.id}">Borrar</button>`:""}</article>`).join("");
+  }
+  async function cargar(){
+    try{
+      const {data,error}=await sb.from("sugerencias").select("id,nombre,comentario,created_at").order("created_at",{ascending:false}).limit(200);
+      if(error)throw error;items=data||[];pintar();
+    }catch(e){offline()}
+  }
+  function pintarAdmin(session){
+    if(session){
+      admin.innerHTML=`<span>Sesión de administrador iniciada. Ya puedes borrar sugerencias.</span><button class="link" id="sug-salir">Cerrar sesión</button>`;
+      admin.querySelector("#sug-salir").onclick=async()=>{await sb.auth.signOut();};
+    }else{
+      admin.innerHTML=`<button class="link" id="sug-soy">Soy el administrador</button>`;
+      admin.querySelector("#sug-soy").onclick=()=>{
+        admin.innerHTML=`<form id="sug-login"><input id="sug-email" type="email" autocomplete="email" placeholder="Tu correo" required aria-label="Tu correo"><button class="btn" type="submit">Enviarme el enlace</button></form><span id="sug-login-msg"></span>`;
+        admin.querySelector("#sug-login").onsubmit=async ev=>{
+          ev.preventDefault();const em=admin.querySelector("#sug-email").value.trim(),m=admin.querySelector("#sug-login-msg");
+          if(!em){m.textContent="Escribe tu correo.";return}
+          const {error}=await sb.auth.signInWithOtp({email:em,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+          m.textContent=error?"No se ha podido enviar el enlace: "+error.message:"Te he enviado un enlace a tu correo. Ábrelo en este mismo navegador.";
+        };
+      };
+    }
+  }
+  form.addEventListener("submit",async ev=>{
+    ev.preventDefault();
+    if(!sb){offline();return}
+    if(form.web.value){say("Gracias.","ok");form.reset();return}
+    const nombre=form.nombre.value.trim(),comentario=form.comentario.value.trim();
+    if(!nombre){say("Escribe tu nombre.","bad");form.nombre.focus();return}
+    if(comentario.length<3){say("Escribe tu sugerencia.","bad");form.comentario.focus();return}
+    const btn=form.querySelector("#sug-enviar");btn.disabled=true;say("Enviando…");
+    try{
+      const {error}=await sb.from("sugerencias").insert({nombre,comentario});
+      if(error)throw error;
+      try{localStorage.setItem("fbs-nombre",nombre)}catch(e){}
+      form.comentario.value="";say("¡Gracias! Tu sugerencia ya está publicada.","ok");await cargar();
+    }catch(e){say(/Demasiadas/.test(e.message||"")?e.message:"No se ha podido enviar. Inténtalo de nuevo en un rato.","bad")}
+    finally{btn.disabled=false}
+  });
+  lista.addEventListener("click",async ev=>{
+    const b=ev.target.closest("[data-del]");if(!b)return;
+    if(!b.classList.contains("confirm")){b.classList.add("confirm");b.textContent="¿Seguro? Pulsa otra vez";setTimeout(()=>{if(b.isConnected){b.classList.remove("confirm");b.textContent="Borrar"}},4000);return}
+    b.disabled=true;
+    const {data,error}=await sb.from("sugerencias").delete().eq("id",+b.dataset.del).select("id");
+    if(error||!data||!data.length){b.textContent="No tienes permiso para borrar";return}
+    items=items.filter(x=>x.id!==+b.dataset.del);pintar();
+  });
+  try{const n=localStorage.getItem("fbs-nombre");if(n)form.nombre.value=n}catch(e){}
+  try{
+    if(!window.supabase)throw new Error("sin librería");
+    sb=window.supabase.createClient(URL_SB,KEY_SB,{auth:{persistSession:true,detectSessionInUrl:true}});
+    sb.auth.onAuthStateChange((_e,session)=>{isAdmin=!!session;pintarAdmin(session);pintar()});
+    sb.auth.getSession().then(({data})=>{isAdmin=!!(data&&data.session);pintarAdmin(data&&data.session);cargar()});
+  }catch(e){offline();pintarAdmin(null)}
+})();
 
 // café
 (function(){
